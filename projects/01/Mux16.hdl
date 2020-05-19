@@ -4,8 +4,8 @@
 // File name: projects/01/Mux16.hdl
 
 /**
- * 16-bit multiplexor: 
- * for i = 0..15 out[i] = a[i] if sel == 0 
+ * 16-bit multiplexor:
+ * for i = 0..15 out[i] = a[i] if sel == 0
  *                        b[i] if sel == 1
  */
 
@@ -15,4 +15,63 @@ CHIP Mux16 {
 
     PARTS:
     // Put your code here:
+    // 1 NAND
+    Not(in=sel, out=n);
+
+    // Output stream if sel == 0
+    // 32 NANDs
+    And(a=a[0], b=n, out=x0);
+    And(a=a[1], b=n, out=x1);
+    And(a=a[2], b=n, out=x2);
+    And(a=a[3], b=n, out=x3);
+    And(a=a[4], b=n, out=x4);
+    And(a=a[5], b=n, out=x5);
+    And(a=a[6], b=n, out=x6);
+    And(a=a[7], b=n, out=x7);
+    And(a=a[8], b=n, out=x8);
+    And(a=a[9], b=n, out=x9);
+    And(a=a[10], b=n, out=x10);
+    And(a=a[11], b=n, out=x11);
+    And(a=a[12], b=n, out=x12);
+    And(a=a[13], b=n, out=x13);
+    And(a=a[14], b=n, out=x14);
+    And(a=a[15], b=n, out=x15);
+
+    // 32 NANDs
+    // Output stream if sel == 0
+    And(a=b[0], b=sel, out=y0);
+    And(a=b[1], b=sel, out=y1);
+    And(a=b[2], b=sel, out=y2);
+    And(a=b[3], b=sel, out=y3);
+    And(a=b[4], b=sel, out=y4);
+    And(a=b[5], b=sel, out=y5);
+    And(a=b[6], b=sel, out=y6);
+    And(a=b[7], b=sel, out=y7);
+    And(a=b[8], b=sel, out=y8);
+    And(a=b[9], b=sel, out=y9);
+    And(a=b[10], b=sel, out=y10);
+    And(a=b[11], b=sel, out=y11);
+    And(a=b[12], b=sel, out=y12);
+    And(a=b[13], b=sel, out=y13);
+    And(a=b[14], b=sel, out=y14);
+    And(a=b[15], b=sel, out=y15);
+
+    // 48 NANDs
+    // Final output stream is a OR(x,y)
+    Or(a=x0, b=y0, out=out[0]);
+    Or(a=x1, b=y1, out=out[1]);
+    Or(a=x2, b=y2, out=out[2]);
+    Or(a=x3, b=y3, out=out[3]);
+    Or(a=x4, b=y4, out=out[4]);
+    Or(a=x5, b=y5, out=out[5]);
+    Or(a=x6, b=y6, out=out[6]);
+    Or(a=x7, b=y7, out=out[7]);
+    Or(a=x8, b=y8, out=out[8]);
+    Or(a=x9, b=y9, out=out[9]);
+    Or(a=x10, b=y10, out=out[10]);
+    Or(a=x11, b=y11, out=out[11]);
+    Or(a=x12, b=y12, out=out[12]);
+    Or(a=x13, b=y13, out=out[13]);
+    Or(a=x14, b=y14, out=out[14]);
+    Or(a=x15, b=y15, out=out[15]);
 }
