@@ -8,6 +8,8 @@
  * for i=0..15: out[i] = not in[i]
  */
 
+// COST = 16 NAND Gates
+
 CHIP Not16 {
     IN in[16];
     OUT out[16];

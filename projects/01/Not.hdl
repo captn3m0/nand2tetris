@@ -8,6 +8,8 @@
  * out = not in
  */
 
+// COST = 1 NAND Gate
+
 CHIP Not {
     IN in;
     OUT out;

@@ -11,6 +11,8 @@
 
 // Or/Xor: These functions can be defined in terms of some of the Boolean functions implemented previously, using some simple Boolean manipulations. Thus, the respective gates can be built using previously built gates.
 
+// COST = 3 NAND gates
+
 CHIP Or {
     IN a, b;
     OUT out;
@@ -18,6 +20,5 @@ CHIP Or {
     PARTS:
     Not(in=a, out=na);
     Not(in=b, out=nb);
-    And(a=na, b=nb, out=nout);
-    Not(in=nout, out=out);
+    Nand(a=na, b=nb, out=out);
 }

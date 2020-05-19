@@ -9,6 +9,8 @@
  *          {0, in} if sel == 1
  */
 
+// COST = 5 NAND Gates
+
 CHIP DMux {
     IN in, sel;
     OUT a, b;

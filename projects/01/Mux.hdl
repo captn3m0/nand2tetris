@@ -9,6 +9,8 @@
  *       b otherwise
  */
 
+// COST = 8 NAND Gates
+
 CHIP Mux {
     IN a, b, sel;
     OUT out;

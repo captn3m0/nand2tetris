@@ -7,6 +7,8 @@
  * Exclusive-or gate:
  * out = not (a == b)
  */
+// Cost = 6 NAND Gates
+// TODO: Improve this
 
 CHIP Xor {
     IN a, b;

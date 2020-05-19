@@ -9,6 +9,8 @@
  *       0 otherwise
  */
 
+// COST = 2 NAND Gates
+
 CHIP And {
     IN a, b;
     OUT out;
