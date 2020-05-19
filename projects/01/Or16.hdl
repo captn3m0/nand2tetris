@@ -8,10 +8,12 @@
  * for i = 0..15 out[i] = (a[i] or b[i])
  */
 
+ // Or/Xor: These functions can be defined in terms of some of the Boolean functions implemented previously, using some simple Boolean manipulations. Thus, the respective gates can be built using previously built gates.
+
 CHIP Or16 {
     IN a[16], b[16];
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+
 }
