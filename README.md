@@ -1,8 +1,9 @@
 # nand2tetris
 
+Working my way through the [Nand to Tetris Course](https://www.nand2tetris.org/)
+
 - Download the latest `nand2tetris.zip` from the book website, and overwrite everything in the `projects` and `tools` directory.
 - Remember to run `chmod +X tools/*.sh` if you're on \*nix.
-
 
 ## [Project 1: Boolean Logic](https://www.nand2tetris.org/project01)
 
