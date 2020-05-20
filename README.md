@@ -23,5 +23,5 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 - [x] `Or8Way` (21)
 - [x] `Mux4Way16` (339)
 - [x] `Mux8Way16` (791)
-- [ ] `DMux4Way` ()
+- [x] `DMux4Way` (37, Fun)
 - [ ] `DMux8Way` ()

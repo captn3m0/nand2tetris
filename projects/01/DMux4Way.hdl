@@ -16,5 +16,28 @@ CHIP DMux4Way {
     OUT a, b, c, d;
 
     PARTS:
-    // Put your code here:
+
+    /**
+     * Demultiplexor:
+     * {x, y} = {in, 0} if sel[0] == 0
+     *          {0, in} if sel[0] == 1
+     */
+    DMux(in=in, sel=sel[0], a=x, b=y);
+    // Now we can copy x,y to abcd as {x|0,y|0,x|0,y|0}
+    // depending on sel[1]
+
+    // sel| 00 | 01 || 10 | 11
+    //S[1]|    0    ||    1
+    //----|----|----||----|---
+    // x  | in | 0  || in | 0
+    // y  | 0  | in || 0  | in
+    //----|----|----||----|---
+    // a  | in | 0  || 0  | 0
+    // b  | 0  | in || 0  | 0
+    // c  | 0  | 0  || in | 0
+    // d  | 0  | 0  || 0  | in
+    Mux(a=x, b=false, sel=sel[1], out=a);
+    Mux(a=y, b=false, sel=sel[1], out=b);
+    Mux(a=false, b=x, sel=sel[1], out=c);
+    Mux(a=false, b=y, sel=sel[1], out=d);
 }
