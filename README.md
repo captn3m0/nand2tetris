@@ -34,3 +34,17 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 - [x] Inc16 (1 x Add16)
 - [x] ALU (nostat)
 - [x] ALU (complete)
+
+## [Project 3: Memory](https://www.nand2tetris.org/project03)
+
+Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf) to understand the clock in the simulator.
+
+- [x] DFF (primitive)
+- [ ] Bit
+- [ ] Register
+- [ ] RAM8
+- [ ] RAM64
+- [ ] RAM512
+- [ ] RAM4K
+- [ ] RAM16K
+- [ ] PC
