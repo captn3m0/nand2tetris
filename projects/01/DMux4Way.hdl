@@ -11,6 +11,8 @@
  *                {0, 0, 0, in} if sel == 11
  */
 
+// COST = 37
+
 CHIP DMux4Way {
     IN in, sel[2];
     OUT a, b, c, d;

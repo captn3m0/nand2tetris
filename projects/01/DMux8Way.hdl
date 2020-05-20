@@ -11,10 +11,31 @@
  *                            {0, 0, 0, 0, 0, 0, 0, in} if sel == 111
  */
 
+// COST = 37 + 8*8 = 101
 CHIP DMux8Way {
     IN in, sel[3];
     OUT a, b, c, d, e, f, g, h;
 
     PARTS:
-    // Put your code here:
+
+    // This makes our "repeated building block" - which we repeat twice
+    // Same as how we do it in DMux4Way
+    DMux4Way(in=in, sel[0]=sel[0], sel[1]=sel[1], a=w, b=x, c=y, d=z);
+
+
+    // If sel[2] is 1:
+    // set a,b,c,d to 0
+    // else set a,b,c,d to w,x,y,z
+    Mux(a=w, b=false, sel=sel[2], out=a);
+    Mux(a=x, b=false, sel=sel[2], out=b);
+    Mux(a=y, b=false, sel=sel[2], out=c);
+    Mux(a=z, b=false, sel=sel[2], out=d);
+
+    // If sel[2] is 0:
+    // set e,f,g,h to 0
+    // else set e,f,g,h to w,x,y,z
+    Mux(a=false, b=w, sel=sel[2], out=e);
+    Mux(a=false, b=x, sel=sel[2], out=f);
+    Mux(a=false, b=y, sel=sel[2], out=g);
+    Mux(a=false, b=z, sel=sel[2], out=h);
 }
