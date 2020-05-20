@@ -28,16 +28,17 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 
 ## [Project 2: Boolean Arithmetic](https://www.nand2tetris.org/project02)
 
-- [x] HalfAdder (Xor+And)
-- [x] FullAdder (2 x HalfAdder, 1 Or)
-- [x] Add16 (1 x HalfAdder, 15 x FullAdder)
-- [x] Inc16 (1 x Add16)
-- [x] ALU (nostat)
-- [x] ALU (complete)
+CHIPs/Gates used in brackets
+
+- [x] `HalfAdder` (Xor+And)
+- [x] `FullAdder` (2 HalfAdder, 1 Or)
+- [x] `Add16` (1 HalfAdder, 15 FullAdder)
+- [x] `Inc16` (1 Add16)
+- [x] `ALU` (6 Mux16, 3 Not16, 1 Add16, 1 And16, 2 Or8Way, 2 Or, 1 Not)
 
 ## [Project 3: Memory](https://www.nand2tetris.org/project03)
 
-Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf) to understand the clock in the simulator.
+Make sure you read through the [Hardware Simulator Tutorial][s] to understand the clock in the simulator.
 
 - [x] `DFF` (primitive)
 - [x] `Bit` (1 Mux, 1DFF)
@@ -49,3 +50,4 @@ Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da
 - [x] `RAM16K` (8 RAM4K, 1 DMux8Way, 1 Mux8Way16)
 - [x] `PC` (1 Register, 1 Inc16, 1 Or8Way, 1 Mux8Way16)
 
+[s]: https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf

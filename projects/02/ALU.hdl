@@ -73,7 +73,6 @@ CHIP ALU {
     // flippedout = !maybeout
     Not16(in=maybeout, out=flippedout);
 
-
     // out = (flippedout|maybeout) depending on no=0|1
     Mux16(a=maybeout, b=flippedout, sel=no, out=out,
         out[0]=outcopy0,
