@@ -33,4 +33,4 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 - [x] Add16 (1 x HalfAdder, 15 x FullAdder)
 - [x] Inc16 (1 x Add16)
 - [x] ALU (nostat)
-- [ ] ALU (complete)
+- [x] ALU (complete)

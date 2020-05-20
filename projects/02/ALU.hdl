@@ -73,6 +73,57 @@ CHIP ALU {
     // flippedout = !maybeout
     Not16(in=maybeout, out=flippedout);
 
+
     // out = (flippedout|maybeout) depending on no=0|1
-    Mux16(a=maybeout, b=flippedout, sel=no, out=out);
+    Mux16(a=maybeout, b=flippedout, sel=no, out=out,
+        out[0]=outcopy0,
+        out[1]=outcopy1,
+        out[2]=outcopy2,
+        out[3]=outcopy3,
+        out[4]=outcopy4,
+        out[5]=outcopy5,
+        out[6]=outcopy6,
+        out[7]=outcopy7,
+        out[8]=outcopy8,
+        out[9]=outcopy9,
+        out[10]=outcopy10,
+        out[11]=outcopy11,
+        out[12]=outcopy12,
+        out[13]=outcopy13,
+        out[14]=outcopy14,
+        out[15]=outcopy15
+    );
+
+
+    // Split Out in 2 halves, do a bitwise OR on each to
+    // see if ANY bit in either half is set to 1
+
+    // outlow = 1 if any of out[0..7] is 1
+    Or8Way(in[0]=outcopy0,
+        in[1]=outcopy1,
+        in[2]=outcopy2,
+        in[3]=outcopy3,
+        in[4]=outcopy4,
+        in[5]=outcopy5,
+        in[6]=outcopy6,
+        in[7]=outcopy7,
+        out=outlow);
+    // outhigh = 1 if any of out[8..15] is 1
+    Or8Way(in[0]=outcopy8,
+        in[1]=outcopy9,
+        in[2]=outcopy10,
+        in[3]=outcopy11,
+        in[4]=outcopy12,
+        in[5]=outcopy13,
+        in[6]=outcopy14,
+        in[7]=outcopy15,
+        out=outhigh);
+
+    // if either outlow or outhigh =1 , onz = 1
+    Or(a=outlow, b=outhigh, out=onz);
+
+    // negate onz to get zr
+    Not(in=onz, out=zr);
+
+    Or(a=outcopy15, b=false, out=ng);
 }
