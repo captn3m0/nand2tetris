@@ -41,7 +41,7 @@ Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da
 
 - [x] DFF (primitive)
 - [x] Bit (1 Mux, 1DFF)
-- [ ] Register
+- [x] Register (16 Bits)
 - [ ] RAM8
 - [ ] RAM64
 - [ ] RAM512
