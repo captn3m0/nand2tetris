@@ -45,6 +45,6 @@ Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da
 - [x] RAM8 (8 Registers, 1 DMux8Way, 1 Mux8Way16)
 - [x] RAM64 (8 RAM8, 1 DMux8Way, 1 Mux8Way16)
 - [x] RAM512 (8 RAM64, 1 DMux8Way, 1 Mux8Way16)
-- [ ] RAM4K
-- [ ] RAM16K
+- [x] RAM4K (8 RAM512, 1 DMux8Way, 1 Mux8Way16)
+- [x] RAM16K (8 RAM4K, 1 DMux8Way, 1 Mux8Way16)
 - [ ] PC
