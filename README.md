@@ -25,3 +25,12 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 - [x] `Mux8Way16` (791)
 - [x] `DMux4Way` (37, Fun)
 - [x] `DMux8Way` (101)
+
+## [Project 2: Boolean Arithmetic](https://www.nand2tetris.org/project02)
+
+- [x] HalfAdder (Xor+And)
+- [x] FullAdder (2 x HalfAdder, 1 Or)
+- [ ] Add16
+- [ ] Inc16
+- [ ] ALU (nostat)
+- [ ] ALU (complete)
