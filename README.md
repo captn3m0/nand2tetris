@@ -43,8 +43,8 @@ Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da
 - [x] Bit (1 Mux, 1DFF)
 - [x] Register (16 Bits)
 - [x] RAM8 (8 Registers, 1 DMux8Way, 1 Mux8Way16)
-- [x] RAM64
-- [ ] RAM512
+- [x] RAM64 (8 RAM8, 1 DMux8Way, 1 Mux8Way16)
+- [x] RAM512 (8 RAM64, 1 DMux8Way, 1 Mux8Way16)
 - [ ] RAM4K
 - [ ] RAM16K
 - [ ] PC
