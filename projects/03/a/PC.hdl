@@ -16,5 +16,64 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // We use this IF inc=1
+    Inc16(in=registerout, out=incrementedoutput);
+
+    // We setup a Mux using the 3 bits as the inputs
+    // for the Mux. Higher priority uses MSB
+    // [ reset | load | inc   ]
+    // [ sel[2]|sel[1]|sel[0] ]
+    // DO NOTHING For this case
+    // a if sel == 000
+    // INC for this case
+    // b if sel == 001
+    // LOAD for the below 2 cases
+    // c if sel == 010
+    // d if sel == 011
+    // RESET for all 4 cases below
+    // e if sel == 100
+    // f if sel == 101
+    // g if sel == 110
+    // h if sel == 111
+    // a-d: we reset
+    // e-f: we load
+    // g: we increment
+    // h: do nothing
+
+    // We don't have a Or3Way, so using this for now
+    // This sets pleaseupdate to true if either of the
+    // reset|load|inc operations is in call
+    Or8Way(
+      in[0]=inc,
+      in[1]=load,
+      in[2]=reset,
+      in[3]=false,
+      in[4]=false,
+      in[5]=false,
+      in[6]=false,
+      in[7]=false,
+      out=pleaseupdate);
+
+    Mux8Way16(
+      // While this is false it doesn't matter
+      // since pleaseupdate = 0 in this case
+      // and register won't reset
+      a=false,
+      // INCREMENT for this case
+      b=incrementedoutput,
+      // LOAD for these 2 cases
+      c=in,
+      d=in,
+      // please pass 0 as input to the register
+      // RESET
+      e=false,
+      f=false,
+      g=false,
+      h=false,
+      sel[2]=reset,
+      sel[1]=load,
+      sel[0]=inc,
+      out=registerinput);
+
+    Register(in=registerinput, load=pleaseupdate, out=registerout, out=out);
 }

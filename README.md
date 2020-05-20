@@ -39,12 +39,13 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 
 Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf) to understand the clock in the simulator.
 
-- [x] DFF (primitive)
-- [x] Bit (1 Mux, 1DFF)
-- [x] Register (16 Bits)
-- [x] RAM8 (8 Registers, 1 DMux8Way, 1 Mux8Way16)
-- [x] RAM64 (8 RAM8, 1 DMux8Way, 1 Mux8Way16)
-- [x] RAM512 (8 RAM64, 1 DMux8Way, 1 Mux8Way16)
-- [x] RAM4K (8 RAM512, 1 DMux8Way, 1 Mux8Way16)
-- [x] RAM16K (8 RAM4K, 1 DMux8Way, 1 Mux8Way16)
-- [ ] PC
+- [x] `DFF` (primitive)
+- [x] `Bit` (1 Mux, 1DFF)
+- [x] `Register` (16 Bits)
+- [x] `RAM8` (8 Registers, 1 DMux8Way, 1 Mux8Way16)
+- [x] `RAM64` (8 RAM8, 1 DMux8Way, 1 Mux8Way16)
+- [x] `RAM512` (8 RAM64, 1 DMux8Way, 1 Mux8Way16)
+- [x] `RAM4K` (8 RAM512, 1 DMux8Way, 1 Mux8Way16)
+- [x] `RAM16K` (8 RAM4K, 1 DMux8Way, 1 Mux8Way16)
+- [x] `PC` (1 Register, 1 Inc16, 1 Or8Way, 1 Mux8Way16)
+
