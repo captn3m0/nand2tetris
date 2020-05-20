@@ -40,7 +40,7 @@ Build order as per the website. Cost for each gate in NAND in brackets.
 Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf) to understand the clock in the simulator.
 
 - [x] DFF (primitive)
-- [ ] Bit
+- [x] Bit (1 Mux, 1DFF)
 - [ ] Register
 - [ ] RAM8
 - [ ] RAM64
