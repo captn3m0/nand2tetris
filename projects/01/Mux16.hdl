@@ -9,12 +9,13 @@
  *                        b[i] if sel == 1
  */
 
+// COST = 113
+
 CHIP Mux16 {
     IN a[16], b[16], sel;
     OUT out[16];
 
     PARTS:
-    // Put your code here:
     // 1 NAND
     Not(in=sel, out=n);
 
