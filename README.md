@@ -42,7 +42,7 @@ Make sure you read through the [Hardware Simulator Tutorial](https://b1391bd6-da
 - [x] DFF (primitive)
 - [x] Bit (1 Mux, 1DFF)
 - [x] Register (16 Bits)
-- [ ] RAM8
+- [x] RAM8 (8 Registers, 1 DMux8Way, 1 Mux8Way16)
 - [ ] RAM64
 - [ ] RAM512
 - [ ] RAM4K
