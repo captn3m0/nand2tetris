@@ -1,0 +1,10 @@
+# I didn't write any of this
+*.hack -linguist-detectable
+*.html -linguist-detectable
+# These are inputs to test the assembler
+projects/06/*/*.asm -linguist-detectable
+
+*.tst linguist-vendored
+
+# What I've written:
+projects/**/*.hdl linguist-language=VHDL linguist-detectable
