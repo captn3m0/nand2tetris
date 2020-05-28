@@ -18,7 +18,7 @@ The Program Counter was tricky. I ended up using a Or8Way (instead of a `Or3Way`
 
 ## Fill.asm
 
-Figured out that my RAM16K implementation was wrong while working on this. The rough pseudocode would be:
+Figured out [that my RAM16K implementation was wrong](https://github.com/captn3m0/nand2tetris/commit/90526cc036a93683f3fa335aae70cc17c787e5a5) while working on this. The rough pseudocode would be:
 ```c
 int r0=*screen;
 while(true) {
