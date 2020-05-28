@@ -52,9 +52,21 @@ Make sure you read through the [Hardware Simulator Tutorial][s] to understand th
 
 [s]: https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf
 
-## [Project 3: Machine Language Programming](https://www.nand2tetris.org/project03)
+## [Project 4: Machine Language Programming](https://www.nand2tetris.org/project03)
 
 Counting number of instructions by `wc -l $file.hack`
 
 - [x] Mult (18)
 - [x] Fill (98)
+
+## [Project 5: Computer Architecture](https://www.nand2tetris.org/project05)
+
+- [ ] `Memory.hdl`
+- [ ] `CPU.hdl`
+- [ ] `Computer.hdl`
+
+Computer chip tests:
+
+- [ ] `Add.hack`
+- [ ] `Max.hack`
+- [ ] `Rect.hack`

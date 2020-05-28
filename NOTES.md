@@ -9,6 +9,9 @@ RAM64
 RAM512
 : I used the premise of the previous note and decided to index the RAM64 moduls by the LSB instead of the customary MSB. It still works :metal:
 
+PC
+: The Program Counter was tricky. I ended up using a Or8Way (instead of a `Or3Way`, which we don't have) along with `Mux8Way16` to pick the input for the register. Since the Mux has duplicate inputs at this point (supports 8, but we only have 3 special, and 1 neutral case) - this can be optimized by switching to a `Mux4Way16`, along with some other changes.
+
 Fill.asm
 : Figured out that my RAM16K implementation was wrong while working on this. The rough pseudocode would be:
     ```c
