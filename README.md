@@ -54,7 +54,7 @@ Make sure you read through the [Hardware Simulator Tutorial][s] to understand th
 
 ## [Project 3: Machine Language Programming](https://www.nand2tetris.org/project03)
 
-Counting number of instructions by `wc -l file.hack`
+Counting number of instructions by `wc -l $file.hack`
 
 - [x] Mult (18)
-- [ ] Fill
+- [x] Fill (98)
