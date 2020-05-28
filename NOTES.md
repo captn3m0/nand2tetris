@@ -44,3 +44,8 @@ So every "cycle" of the loop, we are coloring an entire row. The row is decided 
 
 Memory
 : Started by using a Mux4Way16, but then decided against making the same mistake I did in PC. Switched to 2 Mux16s instead.
+
+CPU
+: No tricks, fairly straight forward implementation of a few Mux atop the ALU. Things I missed on the first pass:
+ - Ensuring that control bits for writeM or jumps are _only_ set when instruction is C. This is just ANDing the relevant control bit with instruction[15]
+ - `!ng != positive`. Zero being the exception. So `positive = !(ng | zr)`. I think the whole jumpToAddress bit calculation can be improved though.
