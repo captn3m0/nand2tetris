@@ -43,11 +43,18 @@ Make sure you read through the [Hardware Simulator Tutorial][s] to understand th
 - [x] `DFF` (primitive)
 - [x] `Bit` (1 Mux, 1DFF)
 - [x] `Register` (16 Bits)
-- [x] `RAM8` (8 Registers, 1 DMux8Way, 1 Mux8Way16)
-- [x] `RAM64` (8 RAM8, 1 DMux8Way, 1 Mux8Way16)
-- [x] `RAM512` (8 RAM64, 1 DMux8Way, 1 Mux8Way16)
-- [x] `RAM4K` (8 RAM512, 1 DMux8Way, 1 Mux8Way16)
-- [x] `RAM16K` (8 RAM4K, 1 DMux8Way, 1 Mux8Way16)
+- [x] `RAM8` (8 Registers, 1 DMux8Way, 1 Mux8Way16) = 8 registers
+- [x] `RAM64` (8 RAM8, 1 DMux8Way, 1 Mux8Way16) = 64 registers
+- [x] `RAM512` (8 RAM64, 1 DMux8Way, 1 Mux8Way16) = 512 registers
+- [x] `RAM4K` (8 RAM512, 1 DMux8Way, 1 Mux8Way16) = 4096 registers
+- [x] `RAM16K` (4 RAM4K, 1 DMux4Way, 1 Mux4Way16) = 16384 registers
 - [x] `PC` (1 Register, 1 Inc16, 1 Or8Way, 1 Mux8Way16)
 
 [s]: https://b1391bd6-da3d-477d-8c01-38cdf774495a.filesusr.com/ugd/44046b_bfd91435260748439493a60a8044ade6.pdf
+
+## [Project 3: Machine Language Programming](https://www.nand2tetris.org/project03)
+
+Counting number of instructions by `wc -l file.hack`
+
+- [x] Mult (18)
+- [ ] Fill
