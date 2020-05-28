@@ -49,3 +49,6 @@ CPU
 : No tricks, fairly straight forward implementation of a few Mux atop the ALU. Things I missed on the first pass:
  - Ensuring that control bits for writeM or jumps are _only_ set when instruction is C. This is just ANDing the relevant control bit with instruction[15]
  - `!ng != positive`. Zero being the exception. So `positive = !(ng | zr)`. I think the whole jumpToAddress bit calculation can be improved though.
+
+Computer
+: The hardest part about this was deciding what name to give to all the pins

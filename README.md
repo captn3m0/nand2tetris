@@ -63,10 +63,10 @@ Counting number of instructions by `wc -l $file.hack`
 
 - [x] `Memory.hdl` (2xMux16, 2xNot, 3xAnd 1 RAM16K)
 - [x] `CPU.hdl` (6 And, 2 Nand, 3 Or, 1 Not, 1 Mux16, 1 Mux16, 2 Register, 1 PC, 1 ALU)
-- [ ] `Computer.hdl`
+- [x] `Computer.hdl` (1 CPU, 1 ROM32K, 1 Memory)
 
 Computer chip tests:
 
-- [ ] `Add.hack`
-- [ ] `Max.hack`
-- [ ] `Rect.hack`
+- [x] `Add.hack`
+- [x] `Max.hack`
+- [x] `Rect.hack`
