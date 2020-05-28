@@ -44,7 +44,6 @@ CHIP CPU {
     // Specifically, when C instruction
     // instruction[14] = 1
     // instruction[13] = 1
-
     // instruction[12] = a
 
     // instruction[11] = c1
@@ -91,10 +90,10 @@ CHIP CPU {
              out=registerA, out[0..14]=addressM);
 
     // Register D (instruction[4] = d2)
-    DRegister(in=aluoutput, load=instruction[4], out=registerD);
+    And(a=instruction[4], b=instruction[15], out=writeD);
+    DRegister(in=aluoutput, load=writeD, out=registerD);
 
-    // TODO: support jumps
-    PC(in=registerA, load=false, inc=true, reset=reset, out[0..14]=pc);
+    PC(in=registerA, load=jumpToAddress, inc=true, reset=reset, out[0..14]=pc);
 
     // the "a" bit = instruction[12] decides whether Y = registerA | inM
     Mux16(a=registerA, b=inM, sel=instruction[12], out=y);
@@ -113,6 +112,28 @@ CHIP CPU {
         out=outM,
         zr=zr, ng=ng);
 
+
+    // (j2 & zr) || (j1 & ng) || (positive && j3)
+    // (i1 & zr) || (i2 & ng) || (positive && i0)
+
+    // jumpZero = i1 && zr
+    And(a=instruction[1], b=zr, out=jumpZero);
+    // jumpNegative = i2 && ng
+    And(a=instruction[2], b=ng, out=jumpNegative);
+    // Positive = Not(ng | zr)
+    Or(a=ng, b=zr, out=LessThanOne);
+    Not(in=LessThanOne, out=Positive);
+
+    // jumpPositive = i0 && Positive
+    And(a=Positive, b=instruction[0], out=jumpPositive);
+
+    // Final 3 way OR
+    Or(a=jumpZero, b=jumpNegative, out=tmpOut);
+    Or(a=tmpOut, b=jumpPositive, out=jumpBits);
+
+    // We are jumping to an address only if we are in a C instruction
+    // and the jump bits are on
+    And(a=instruction[15], b=jumpBits, out=jumpToAddress);
     // if we are on instruction C, and d3 is true
-    And(a=instruction[3], b=instruction[15], out=writeM);
+    And(a=instruction[15], b=instruction[3], out=writeM);
 }

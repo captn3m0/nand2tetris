@@ -61,8 +61,8 @@ Counting number of instructions by `wc -l $file.hack`
 
 ## [Project 5: Computer Architecture](https://www.nand2tetris.org/project05)
 
-- [x] `Memory.hdl` (2xMux16, 2xNot, 3xAnd)
-- [ ] `CPU.hdl`
+- [x] `Memory.hdl` (2xMux16, 2xNot, 3xAnd 1 RAM16K)
+- [x] `CPU.hdl` (6 And, 2 Nand, 3 Or, 1 Not, 1 Mux16, 1 Mux16, 2 Register, 1 PC, 1 ALU)
 - [ ] `Computer.hdl`
 
 Computer chip tests:
