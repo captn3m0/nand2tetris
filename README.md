@@ -5,6 +5,8 @@ Working my way through the [Nand to Tetris Course](https://www.nand2tetris.org/)
 - Download the latest `nand2tetris.zip` from the book website, and overwrite everything in the `projects` and `tools` directory.
 - Remember to run `chmod +X tools/*.sh` if you're on \*nix.
 
+My notes are in [NOTES.md](NOTES.md).
+
 ## [Project 1: Boolean Logic](https://www.nand2tetris.org/project01)
 
 Build order as per the website. Cost for each gate in NAND in brackets.
