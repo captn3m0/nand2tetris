@@ -11,10 +11,13 @@
 // "white" in every pixel;
 // the screen should remain fully clear as long as no key is pressed.
 
-// Set i to 255
-@255
+// See NOTES.md for details on how this works
+
+(PROGRAM_START)
+// Set R0 to SCREEN
+@SCREEN
 D=A
-@i
+@R0
 M=D
 
 (KEYBOARD_LOOP)
@@ -36,47 +39,107 @@ M=D
 
 // At this point @color = 0|-1 depending on whether a key is pressed
 
-// This is adapted from manual-fill.asm
-
-
 // coloring code goes here
 
+// Read color to D
 
 @color
 D=M
 
-@SCREEN
+// Load the value in R0 to A
+@R0
+A=M
+// And off we go hunting
 M=D
-
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
+A=A+1
+M=D
 
 // Keyboard Loop ending
 
-// Reduce i by 1
-@i
-M=M-1
-
-// Jump to ENDIF if @i>0
-@i
-D=M
-@ENDIF
-D;JGT
-
-// Here i==0, so we reset it to 255
-@255
+// Bump A by 1 and write it to R0
+A=A+1
 D=A
-@i
+@R0
 M=D
+
+// If R0-24575 <= 0, then jump to program start
+@24575
+D=A
+@R0
+D=M-D // (D=R0-24575)
+@ENDIF
+D;JLE
+
+// Here, R1 is negative
+// set R0=@SCREEN and let the loop continue
+@SCREEN
+D=A
+@R0
+M=D
+
 
 (ENDIF)
 
-
+// OTHERWISE, we just restart the keyboard loop
 @KEYBOARD_LOOP
-0;JMP
-
-
-// @WRITE_COMPLETE_ROW
-// 0;JMP
-
-(END)
-@END
 0;JMP
