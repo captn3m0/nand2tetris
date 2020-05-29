@@ -4,6 +4,45 @@ fn = ARGV[0]
 
 # Not implemented yet
 class SymbolTable
+  def initialize
+    @st = {:SP => 0,
+      :LCL => 1,
+      :ARG => 2,
+      :THIS => 3,
+      :THAT => 4,
+      :R0 => 0,
+      :R1 => 1,
+      :R2 => 2,
+      :R3 => 3,
+      :R4 => 4,
+      :R5 => 5,
+      :R6 => 6,
+      :R7 => 7,
+      :R8 => 8,
+      :R9 => 9,
+      :R10 => 10,
+      :R11 => 11,
+      :R12 => 12,
+      :R13 => 13,
+      :R14 => 14,
+      :R15 => 15,
+      :SCREEN => 16384,
+      :KBD => 24576
+    }
+
+  end
+
+  def add(symb, address)
+    @st[symb] = address
+  end
+
+  def includes?
+    @st.has? symb
+  end
+
+  def get(symb)
+    @st[symb]
+  end
 end
 
 class Code
@@ -118,12 +157,22 @@ class Parser
     return nil unless line.include? ';'
     line.split(';').last
   end
+
+  # Return
+  def symbol_type
+    symbol[0].match(/^\d/) ? :number : :variable
+  end
+
+  def reset
+    @ic = 0
+  end
+
   def run
     res = []
     while more_commands?
       case command_type
       when :A_COMMAND
-        res << [command_type, [symbol]]
+        res << [command_type, [symbol_type, symbol]]
       when :C_COMMAND
         res << [command_type, [dest, comp, jump]]
       when :L_COMMAND
@@ -151,13 +200,42 @@ class Assembler
   attr_reader :res
   def initialize(fn)
     @res = []
+    @st = SymbolTable.new
     parser = Parser.new(fn)
+    # instruction counter for first pass
+    ic = 0
+    # initial memory pointer starts just after R15
+    memory_pointer = 16
+    # First pass
+    parser.run.each do |command|
+      # Our parser has already dropped all comments and whitespace
+      # so everything in this pass is either a A or a C instruction
+      if command[0] == :L_COMMAND
+        symbol = command[1][0]
+        @st.add(symbol, ic)
+      end
+      ic+=1
+    end
+    # we rewind our parser
+    parser.reset
     parser.run.each do |command|
       instruction = command[0]
       case instruction
       when :A_COMMAND
-        symbol = command[1][0]
-        @res << symbol.to_i.to_s(2).rjust(16, "0")
+        val = nil
+        symbol_type, symbol = command[1]
+        if symbol_type === :variable
+          if @st.has? symbol
+            val =@st.get(symbol)
+          else
+            val = memory_pointer
+            @st.add_var(symbol, memory_pointer)
+            memory_pointer+=1
+          end
+        else
+          val = symbol.to_i
+        end
+        @res << val.to_i.to_s(2).rjust(16, "0")
       when :C_COMMAND
         dest,comp,jump = command[1]
         @res << "111#{Code.comp(comp)}#{Code.dest(dest)}#{Code.jump(jump)}"
