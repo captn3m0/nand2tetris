@@ -1,19 +1,5 @@
-#!/bin/sh
-pushd ../projects/06/add
-../../../tools/Assembler.sh Add.asm
-popd
-
-pushd ../projects/06/max
-../../../tools/Assembler.sh Max.asm
-../../../tools/Assembler.sh MaxL.asm
-popd
-
-pushd ../projects/06/rect
-../../../tools/Assembler.sh Rect.asm
-../../../tools/Assembler.sh RectL.asm
-popd
-
-pushd ../projects/06/pong
-../../../tools/Assembler.sh Pong.asm
-../../../tools/Assembler.sh PongL.asm
-popd
+#!/bin/bash
+diff ../projects/06/add/Add.hack <(ruby assembler.rb ../projects/06/add/Add.asm)
+diff ../projects/06/max/MaxL.hack <(ruby assembler.rb ../projects/06/max/MaxL.asm)
+diff ../projects/06/rect/RectL.hack <(ruby assembler.rb ../projects/06/rect/RectL.asm)
+diff ../projects/06/pong/PongL.hack <(ruby assembler.rb ../projects/06/pong/PongL.asm)

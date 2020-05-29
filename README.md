@@ -79,13 +79,13 @@ Counting number of instructions by `wc -l $file.hack`
 
 ### Without Symbols
 
-- [ ] `MaxL.asm`
-- [ ] `RectL.asm`
-- [ ] `PongL.asm`
+- [x] `MaxL.asm`
+- [x] `RectL.asm`
+- [x] `PongL.asm`
+- [x] `Add.asm`
 
 ### Symbolic Programs
 
-- [ ] `Add.asm`
 - [ ] `Max.asm`
 - [ ] `Rect.asm`
 - [ ] `Pong.asm`

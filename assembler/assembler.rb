@@ -103,10 +103,10 @@ class Parser
   end
 
   def comp
-    if dest and jump
+    if dest && jump
       line.split('=').last.split(';').first
     elsif dest
-      line.split('=').first
+      line.split('=').last
     elsif jump
       line.split(';').first
     else
