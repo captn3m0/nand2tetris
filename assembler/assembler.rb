@@ -33,15 +33,15 @@ class SymbolTable
   end
 
   def add(symb, address)
-    @st[symb] = address
+    @st[symb.to_sym] = address
   end
 
-  def includes?
-    @st.has? symb
+  def has?(symb)
+    @st.has_key? symb.to_sym
   end
 
   def get(symb)
-    @st[symb]
+    @st[symb.to_sym]
   end
 end
 
@@ -96,6 +96,7 @@ class Code
   end
 
   def self.comp(str)
+    str.strip!
     a = c1 = c2 = c3 = c4 = c5 = c6 = 0
     a = str.include? 'M'
     key = str.gsub(/[AM]/, 'Y')
@@ -187,9 +188,15 @@ class Parser
     @ic = 0
     @lines = []
     File.readlines(fn).each do |line|
-      line.chomp!
+      line.strip!
       next if line.empty?
       next if line[0...2] == '//'
+
+      if line.include? '//'
+        comment_start = line.index('//')
+        line = line[0...comment_start]
+        line.strip!
+      end
 
       @lines << line
     end
@@ -213,8 +220,9 @@ class Assembler
       if command[0] == :L_COMMAND
         symbol = command[1][0]
         @st.add(symbol, ic)
+      else
+        ic+=1
       end
-      ic+=1
     end
     # we rewind our parser
     parser.reset
@@ -229,7 +237,7 @@ class Assembler
             val =@st.get(symbol)
           else
             val = memory_pointer
-            @st.add_var(symbol, memory_pointer)
+            @st.add(symbol, memory_pointer)
             memory_pointer+=1
           end
         else
