@@ -5,31 +5,29 @@ fn = ARGV[0]
 # Not implemented yet
 class SymbolTable
   def initialize
-    @st = {:SP => 0,
-      :LCL => 1,
-      :ARG => 2,
-      :THIS => 3,
-      :THAT => 4,
-      :R0 => 0,
-      :R1 => 1,
-      :R2 => 2,
-      :R3 => 3,
-      :R4 => 4,
-      :R5 => 5,
-      :R6 => 6,
-      :R7 => 7,
-      :R8 => 8,
-      :R9 => 9,
-      :R10 => 10,
-      :R11 => 11,
-      :R12 => 12,
-      :R13 => 13,
-      :R14 => 14,
-      :R15 => 15,
-      :SCREEN => 16384,
-      :KBD => 24576
-    }
-
+    @st = { SP: 0,
+            LCL: 1,
+            ARG: 2,
+            THIS: 3,
+            THAT: 4,
+            R0: 0,
+            R1: 1,
+            R2: 2,
+            R3: 3,
+            R4: 4,
+            R5: 5,
+            R6: 6,
+            R7: 7,
+            R8: 8,
+            R9: 9,
+            R10: 10,
+            R11: 11,
+            R12: 12,
+            R13: 13,
+            R14: 14,
+            R15: 15,
+            SCREEN: 16_384,
+            KBD: 24_576 }
   end
 
   def add(symb, address)
@@ -37,7 +35,7 @@ class SymbolTable
   end
 
   def has?(symb)
-    @st.has_key? symb.to_sym
+    @st.key? symb.to_sym
   end
 
   def get(symb)
@@ -47,25 +45,25 @@ end
 
 class Code
   DEST_MAP = {
-    nil => "000",
-    'M' => "001",
-    'D' => "010",
-    'MD' => "011",
-    'A' => "100",
-    'AM' => "101",
-    'AD' => "110",
-    'AMD' => "111"
+    nil => '000',
+    'M' => '001',
+    'D' => '010',
+    'MD' => '011',
+    'A' => '100',
+    'AM' => '101',
+    'AD' => '110',
+    'AMD' => '111'
   }.freeze
 
   JUMP_MAP = {
-    nil => "000",
-    'JGT' => "001",
-    'JEQ' => "010",
-    'JGE' => "011",
-    'JLT' => "100",
-    'JNE' => "101",
-    'JLE' => "110",
-    'JMP' => "111"
+    nil => '000',
+    'JGT' => '001',
+    'JEQ' => '010',
+    'JGE' => '011',
+    'JLT' => '100',
+    'JNE' => '101',
+    'JLE' => '110',
+    'JMP' => '111'
   }.freeze
   COMP_MAP = {
     '0' => '101010',
@@ -97,10 +95,8 @@ class Code
 
   def self.comp(str)
     str.strip!
-    a = c1 = c2 = c3 = c4 = c5 = c6 = 0
-    a = str.include? 'M'
     key = str.gsub(/[AM]/, 'Y')
-    (a ? '1' : '0') + COMP_MAP[key]
+    (str.include?('M') ? '1' : '0') + COMP_MAP[key]
   end
 end
 
@@ -139,6 +135,7 @@ class Parser
 
   def dest
     return nil unless line.include? '='
+
     line.split('=').first
   end
 
@@ -156,6 +153,7 @@ class Parser
 
   def jump
     return nil unless line.include? ';'
+
     line.split(';').last
   end
 
@@ -221,7 +219,7 @@ class Assembler
         symbol = command[1][0]
         @st.add(symbol, ic)
       else
-        ic+=1
+        ic += 1
       end
     end
     # we rewind our parser
@@ -234,18 +232,18 @@ class Assembler
         symbol_type, symbol = command[1]
         if symbol_type === :variable
           if @st.has? symbol
-            val =@st.get(symbol)
+            val = @st.get(symbol)
           else
             val = memory_pointer
             @st.add(symbol, memory_pointer)
-            memory_pointer+=1
+            memory_pointer += 1
           end
         else
           val = symbol.to_i
         end
-        @res << val.to_i.to_s(2).rjust(16, "0")
+        @res << val.to_i.to_s(2).rjust(16, '0')
       when :C_COMMAND
-        dest,comp,jump = command[1]
+        dest, comp, jump = command[1]
         @res << "111#{Code.comp(comp)}#{Code.dest(dest)}#{Code.jump(jump)}"
       end
     end

@@ -6,10 +6,7 @@ diff ../projects/06/max/MaxL.hack <(ruby assembler.rb ../projects/06/max/MaxL.as
 diff ../projects/06/rect/RectL.hack <(ruby assembler.rb ../projects/06/rect/RectL.asm)
 diff ../projects/06/pong/PongL.hack <(ruby assembler.rb ../projects/06/pong/PongL.asm)
 
-
-
+# Programs with symbols
 diff ../projects/06/max/Max.hack <(ruby assembler.rb ../projects/06/max/Max.asm)
 diff ../projects/06/rect/Rect.hack <(ruby assembler.rb ../projects/06/rect/Rect.asm)
 diff ../projects/06/pong/Pong.hack <(ruby assembler.rb ../projects/06/pong/Pong.asm)
-
-
