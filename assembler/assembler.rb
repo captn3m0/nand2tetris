@@ -1,29 +1,32 @@
 # frozen_string_literal: true
 
 fn = ARGV[0]
-ic = 0
+
+# Not implemented yet
+class SymbolTable
+end
 
 class Code
   DEST_MAP = {
-    'null' => [0, 0, 0],
-    'M' => [0, 0, 1],
-    'D' => [0, 1, 0],
-    'MD' => [0, 1, 1],
-    'A' => [1, 0, 0],
-    'AM' => [1, 0, 1],
-    'AD' => [1, 1, 0],
-    'AMD' => [1, 1, 1]
+    nil => "000",
+    'M' => "001",
+    'D' => "010",
+    'MD' => "011",
+    'A' => "100",
+    'AM' => "101",
+    'AD' => "110",
+    'AMD' => "111"
   }.freeze
 
   JUMP_MAP = {
-    'null' => [0, 0, 0],
-    'JGT' => [0, 0, 1],
-    'JEQ' => [0, 1, 0],
-    'JGE' => [0, 1, 1],
-    'JLT' => [1, 0, 0],
-    'JNE' => [1, 0, 1],
-    'JLE' => [1, 1, 0],
-    'JMP' => [1, 1, 1]
+    nil => "000",
+    'JGT' => "001",
+    'JEQ' => "010",
+    'JGE' => "011",
+    'JLT' => "100",
+    'JNE' => "101",
+    'JLE' => "110",
+    'JMP' => "111"
   }.freeze
   COMP_MAP = {
     '0' => '101010',
@@ -94,17 +97,44 @@ class Parser
     end
   end
 
-  def dest; end
-
-  def comp; end
-
-  def jump; end
-
-  def run
-    advance while more_commands?
+  def dest
+    return nil unless line.include? '='
+    line.split('=').first
   end
 
-  def initialize(_file_name)
+  def comp
+    if dest and jump
+      line.split('=').last.split(';').first
+    elsif dest
+      line.split('=').first
+    elsif jump
+      line.split(';').first
+    else
+      line
+    end
+  end
+
+  def jump
+    return nil unless line.include? ';'
+    line.split(';').last
+  end
+  def run
+    res = []
+    while more_commands?
+      case command_type
+      when :A_COMMAND
+        res << [command_type, [symbol]]
+      when :C_COMMAND
+        res << [command_type, [dest, comp, jump]]
+      when :L_COMMAND
+        res << [command_type, [symbol]]
+      end
+      advance
+    end
+    res
+  end
+
+  def initialize(fn)
     @ic = 0
     @lines = []
     File.readlines(fn).each do |line|
@@ -115,4 +145,28 @@ class Parser
       @lines << line
     end
   end
+end
+
+class Assembler
+  attr_reader :res
+  def initialize(fn)
+    @res = []
+    parser = Parser.new(fn)
+    parser.run.each do |command|
+      instruction = command[0]
+      case instruction
+      when :A_COMMAND
+        symbol = command[1][0]
+        @res << symbol.to_i.to_s(2).rjust(16, "0")
+      when :C_COMMAND
+        dest,comp,jump = command[1]
+        @res << "111#{Code.comp(comp)}#{Code.dest(dest)}#{Code.jump(jump)}"
+      end
+    end
+  end
+end
+
+if ARGV[0]
+  asm = Assembler.new(fn)
+  puts asm.res.join("\n")
 end
