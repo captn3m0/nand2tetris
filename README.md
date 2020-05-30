@@ -89,3 +89,16 @@ Counting number of instructions by `wc -l $file.hack`
 - [x] `Max.asm`
 - [x] `Rect.asm`
 - [x] `Pong.asm`
+
+## [Project 6: Virtual Machine I - Stack Arithmetic](https://www.nand2tetris.org/project07)
+
+### Arithmetic Commands
+
+- [ ] SimpleAdd.vm
+- [ ] StackTest.vm
+
+### Memory Access Commands
+
+- [ ] BasicTest.vm
+- [ ] PointerTest.vm
+- [ ] StackTest.vm
