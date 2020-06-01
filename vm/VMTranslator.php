@@ -41,9 +41,9 @@ class Parser {
     return $this->pieces[2];
   }
 
-  private function stripComment(String $line ) {
+  private function stripComment(String $line) {
     $index = strpos($line, '//');
-    if ($index == 0) {
+    if ($index === 0) {
       return '';
     }
     if ($index !== false) {
@@ -57,10 +57,9 @@ class Parser {
     while(!feof($this->file)) {
       $line = fgets($this->file);
       $line = $this->stripComment(trim($line));
-      if (empty($line)) continue;
-
+      if (empty($line))continue;
       $this->pieces = explode(" ", $line);
-      $this->command = $pieces[0];
+      $this->command = $this->pieces[0];
       yield $this->command;
     }
     fclose($this->file);
@@ -73,15 +72,15 @@ class CodeWriter {
   }
 
   function writeArithmetic(String $command ) {
-    throw new Exception("Not yet Implemented");
+    throw new \Exception("Not yet Implemented");
   }
 
   function writePushPop(Int $command, String $segment , Int $index) {
-    throw new Exception("Not yet Implemented");
+    throw new \Exception("Not yet Implemented");
   }
 
   function close() {
-    throw new Exception("Not yet Implemented");
+    throw new \Exception("Not yet Implemented");
   }
 }
 
@@ -107,7 +106,8 @@ class VMTranslator {
       $parser = new Parser($file);
 
       foreach ($parser->commands() as $command) {
-        switch ($command) {
+        $commandType = CommandType::fromName($command);
+        switch ($commandType) {
           case CommandType::ARITHMETIC:
             $this->writer->writeArithmetic($command);
             break;
@@ -115,12 +115,12 @@ class VMTranslator {
           case CommandType::PUSH:
           case CommandType::POP:
             $segment = $parser->arg1();
-            $index = $parser->arg2();
-            $this->writer->writePushPop($command, $parser, $index);
+            $index = intval($parser->arg2());
+            $this->writer->writePushPop($commandType, $segment, $index);
             break;
 
           default:
-            throw new Exception("Not Implemented", 1);
+            throw new \Exception("Not Implemented $command", 1);
             break;
         }
       }
