@@ -216,19 +216,94 @@ class CodeWriter {
           "@$index // push $segment $index",
           // Write it to D
           "D=A",
-          // A=SP
-          "@SP",
-          "A=M",
-          // Write D to SP
-          "M=D",
-          // Bump Stack Pointer
-          "@SP",
-          "M=M+1 // end push $segment $index",
+        ]);
+        break;
+      case 'argument':
+      case 'local':
+      case 'this':
+      case 'that':
+        $this->resolveSegmentToR13($segment, $index);
+        $this->write([
+          "@R13",
+          "D=M",
+        ]);
+        break;
+
+      case 'temp':
+        // Temp section starts from R5;
+        $tempBase = 5;
+        $ramAddress = $tempBase + $index;
+        $register = "@R$ramAddress";
+        $this->write([
+          "$register // temp $index",
+          "D=M"
         ]);
         break;
 
       default:
-        throw new Exception("Not Implemented $segment", 1);
+        throw new \Exception("Not Implemented $segment", 1);
+        break;
+    }
+
+    $this->write([
+      // A=SP
+      "@SP",
+      "A=M",
+      // Write D to SP
+      "M=D",
+      // Bump Stack Pointer
+      "@SP",
+      "M=M+1 // end push $segment $index",
+    ]);
+  }
+
+  private function segmentToRegister(String $segment) {
+    return [
+      'local' => '@LCL',
+      'argument' => '@ARG',
+      'this' => '@THIS',
+      'that' => '@THAT',
+    ][$segment];
+  }
+
+  private function resolveSegmentToR13(string $segment, Int $index) {
+    $register = $this->segmentToRegister($segment);
+    $this->write([
+        "$register // $segment $index" ,
+        "D=M",
+        "@$index // write $index to A",
+        "D=D+A // D = segment+index",
+        "@R13 // save it to R13",
+        "M=D // write $register+$index to R13",
+      ]);
+  }
+
+  private function writePop(String $segment, Int $index) {
+    switch ($segment) {
+      // The address is given by LCL+INDEX
+      case 'local':
+      case 'argument':
+      case 'this':
+      case 'that':
+        if($index !== 0) {
+          $this->resolveSegmentToR13($segment, $index);
+          $lookupRegister = '@R13';
+        } else {
+          $lookupRegister = $this->segmentToRegister($segment);
+        }
+
+        $this->write([
+          "@SP // pop",
+          "A=M-1",
+          "D=M",
+          $lookupRegister,
+          "A=M // Read $lookupRegister to A",
+          "M=D // Write D to *A",
+        ]);
+        break;
+
+      default:
+        # code...
         break;
     }
   }
@@ -240,7 +315,7 @@ class CodeWriter {
         break;
 
       case CommandType::POP:
-
+        $this->writePop($segment, $index);
         break;
       default:
         throw new Exception("Invalid Command Type", 1);
