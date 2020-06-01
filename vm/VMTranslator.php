@@ -68,7 +68,12 @@ class Parser {
 
 class CodeWriter {
   function __construct($outputFile) {
+    $this->ic = 0;
     $this->file = fopen($outputFile, "w");
+  }
+
+  function __destruct() {
+    fclose($this->file);
   }
 
   function writeArithmetic(String $command ) {
@@ -77,21 +82,32 @@ class CodeWriter {
       "// ==== $command ====",
       "// pop starts",
       "@SP",
-      "A=M",
-      "A=A-1",
+      "A=M-1",
       "D=M",
       "// pop ends",
+      "// inner $command starts",
+      'A=A-1',
     ]);
     switch ($command) {
       case 'add':
         // But add it to previous D this time
         $this->write([
-          "// inner add starts",
-          "A=A-1",
-          "D=D+M",
-          "// inner add ends",
+          "M=D+M"
         ]);
         break;
+
+      case 'eq':
+        $jumpPointer = $this->ic+5;
+        $this->write([
+          'D=M-D', // ic
+          'M=0', // set M=0, in case they aren't equal
+          "@{jumpPointer}",
+          'D;JEQ', //ic+2
+          'M=0',   //ic+3
+          'M=M-1', //ic+4
+          // set M=-1 (TRUE), in case they are equal
+          // *SP=-1 = true
+        ]);
 
       default:
         # code...
@@ -99,19 +115,16 @@ class CodeWriter {
     }
 
     $this->write([
-      // And then write the result back to M
-      "M=D",
-      // Now we write our current A to SP
-      "A=A+1",
-      "D=A",
-      "@SP",
-      "M=D",
-      "// ==== $command ===="
+      '@SP',
+      'M=M-1'
     ]);
   }
 
   private function write(Array $lines) {
     foreach ($lines as $line) {
+      if (substr($line, 0, 2) !== "//") {
+        $this->ic += 1;
+      }
       fwrite($this->file, "$line\n");
     }
   }
@@ -131,10 +144,8 @@ class CodeWriter {
           // Write D to SP
           "M=D",
           // Bump Stack Pointer
-          "A=A+1",
-          "D=A",
           "@SP",
-          "M=D",
+          "M=M+1",
           "// end push $segment $index"
         ]);
         break;
@@ -158,10 +169,6 @@ class CodeWriter {
         throw new Exception("Invalid Command Type", 1);
         break;
     }
-  }
-
-  function close() {
-    throw new \Exception("Not yet Implemented");
   }
 }
 
