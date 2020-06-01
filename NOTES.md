@@ -60,3 +60,7 @@ No tricks, fairly straight forward implementation of a few Mux atop the ALU. Thi
 ## Computer
 
 The hardest part about this was deciding what name to give to all the pins
+
+## Assembler
+
+I think there are definitely some tricks with reducing lookup table sizes, but I wasn't really aiming for performance (I wrote it in ruby afterall). Also working on a rust implementation, just to learn rust.
