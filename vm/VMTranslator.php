@@ -72,11 +72,92 @@ class CodeWriter {
   }
 
   function writeArithmetic(String $command ) {
-    throw new \Exception("Not yet Implemented");
+    // Read top of stack to D
+    $this->write([
+      "// ==== $command ====",
+      "// pop starts",
+      "@SP",
+      "A=M",
+      "A=A-1",
+      "D=M",
+      "// pop ends",
+    ]);
+    switch ($command) {
+      case 'add':
+        // But add it to previous D this time
+        $this->write([
+          "// inner add starts",
+          "A=A-1",
+          "D=D+M",
+          "// inner add ends",
+        ]);
+        break;
+
+      default:
+        # code...
+        break;
+    }
+
+    $this->write([
+      // And then write the result back to M
+      "M=D",
+      // Now we write our current A to SP
+      "A=A+1",
+      "D=A",
+      "@SP",
+      "M=D",
+      "// ==== $command ===="
+    ]);
+  }
+
+  private function write(Array $lines) {
+    foreach ($lines as $line) {
+      fwrite($this->file, "$line\n");
+    }
+  }
+
+  function writePush(String $segment, Int $index) {
+    switch ($segment) {
+      case 'constant':
+        $this->write([
+          "// push $segment $index",
+          // Take the constant
+          "@$index",
+          // Write it to D
+          "D=A",
+          // A=SP
+          "@SP",
+          "A=M",
+          // Write D to SP
+          "M=D",
+          // Bump Stack Pointer
+          "A=A+1",
+          "D=A",
+          "@SP",
+          "M=D",
+          "// end push $segment $index"
+        ]);
+        break;
+
+      default:
+        throw new Exception("Not Implemented $segment", 1);
+        break;
+    }
   }
 
   function writePushPop(Int $command, String $segment , Int $index) {
-    throw new \Exception("Not yet Implemented");
+    switch ($command) {
+      case CommandType::PUSH:
+        $this->writePush($segment, $index);
+        break;
+
+      case CommandType::POP:
+
+        break;
+      default:
+        throw new Exception("Invalid Command Type", 1);
+        break;
+    }
   }
 
   function close() {
@@ -128,7 +209,9 @@ class VMTranslator {
   }
 
   private function outputFile() {
-    return '/tmp/file.asm';
+    $dir = dirname($this->files[0]);
+    $name = basename($dir);
+    return "$dir/$name.asm";
   }
 }
 
