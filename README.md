@@ -108,6 +108,6 @@ wc -l file.hack
 
 ### Memory Access Commands
 
-- [ ] BasicTest.vm
+- [x] BasicTest.vm
 - [ ] PointerTest.vm
 - [ ] StackTest.vm
