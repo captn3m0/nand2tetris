@@ -180,13 +180,13 @@ class CodeWriter {
         }
         $this->write([
           $register,
+          "A=M",
           "D=M",
         ]);
         break;
 
       case 'temp':
         $register = $this->resolveTemp($index);
-        // TODO FIX
         $this->write([
           "$register // temp $index",
           "D=M"

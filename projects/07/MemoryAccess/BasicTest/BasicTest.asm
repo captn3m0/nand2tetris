@@ -119,6 +119,7 @@ D=M
 @R11
 M=D // end pop temp 6 (L13)
 @LCL
+A=M
 D=M
 @SP
 A=M
@@ -132,6 +133,7 @@ D=D+A // D = segment+index
 @R13 // save it to R13
 M=D // write @THAT+5 to R13
 @R13
+A=M
 D=M
 @SP
 A=M
@@ -152,6 +154,7 @@ D=D+A // D = segment+index
 @R13 // save it to R13
 M=D // write @ARG+1 to R13
 @R13
+A=M
 D=M
 @SP
 A=M
@@ -172,6 +175,7 @@ D=D+A // D = segment+index
 @R13 // save it to R13
 M=D // write @THIS+6 to R13
 @R13
+A=M
 D=M
 @SP
 A=M
@@ -185,6 +189,7 @@ D=D+A // D = segment+index
 @R13 // save it to R13
 M=D // write @THIS+6 to R13
 @R13
+A=M
 D=M
 @SP
 A=M
@@ -219,5 +224,5 @@ A=A-1
 M=D+M
 @SP
 M=M-1 // end add (L24)
-@222
+@227
 0;JMP
