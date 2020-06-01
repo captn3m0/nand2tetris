@@ -76,48 +76,127 @@ class CodeWriter {
     fclose($this->file);
   }
 
+  function close() {
+    $endJump = $this->ic+1;
+    $this->write([
+      "@$endJump",
+      "0;JMP"
+    ]);
+  }
+
   function writeArithmetic(String $command ) {
+    $stackDecrease=true;
     // Read top of stack to D
     $this->write([
-      "// ==== $command ====",
-      "// pop starts",
-      "@SP",
+      "@SP // ==== $command ====",
       "A=M-1",
-      "D=M",
-      "// pop ends",
-      "// inner $command starts",
-      'A=A-1',
+      "D=M"
     ]);
+
     switch ($command) {
+      case 'sub':
+        $this->write([
+          'A=A-1',
+          "M=M-D",
+        ]);
+        break;
+
       case 'add':
         // But add it to previous D this time
         $this->write([
-          "M=D+M"
+          'A=A-1',
+          'M=D+M'
+        ]);
+        break;
+
+      case 'neg':
+        $this->write([
+          'M=-M',
+        ]);
+        $stackDecrease = false;
+        break;
+
+
+      case 'not':
+        $this->write([
+          'M=!M',
+        ]);
+        $stackDecrease = false;
+        break;
+
+      case 'and':
+        $this->write([
+          'A=A-1',
+          'M=D&M',
+        ]);
+        break;
+
+      case 'or':
+        $this->write([
+          'A=A-1',
+          'M=D|M',
+        ]);
+        break;
+
+      case 'lt':
+        $jumpPointer = $this->ic+10;
+        $this->write([
+          'A=A-1',
+          'D=M-D',
+          'M=0',
+          'M=M-1',
+          "@$jumpPointer",
+          "D;JLT",
+          "@SP",
+          "A=M-1",
+          "A=A-1",
+          "M=0",
+        ]);
+        break;
+
+      case 'gt':
+        $jumpPointer = $this->ic+10;
+        $this->write([
+          'A=A-1',
+          'D=M-D',
+          'M=0',
+          'M=M-1',
+          "@$jumpPointer",
+          "D;JGT",
+          "@SP",
+          "A=M-1",
+          "A=A-1",
+          "M=0",
         ]);
         break;
 
       case 'eq':
-        $jumpPointer = $this->ic+5;
+        $jumpPointer = $this->ic+10;
         $this->write([
-          'D=M-D', // ic
-          'M=0', // set M=0, in case they aren't equal
-          "@{jumpPointer}",
-          'D;JEQ', //ic+2
-          'M=0',   //ic+3
-          'M=M-1', //ic+4
-          // set M=-1 (TRUE), in case they are equal
-          // *SP=-1 = true
+          'A=A-1',
+          'D=M-D',
+          'M=0',
+          'M=M-1',
+          "@{$jumpPointer}",
+          'D;JEQ',
+          "@SP",
+          "A=M-1",
+          "A=A-1",
+          "M=0",
         ]);
+        break;
 
       default:
-        # code...
-        break;
+      throw new \Exception("$command not Implemented", 1);
+
     }
 
-    $this->write([
-      '@SP',
-      'M=M-1'
-    ]);
+    if ($stackDecrease) {
+      $this->write([
+        '@SP',
+        'M=M-1'
+      ]);
+    }
   }
 
   private function write(Array $lines) {
@@ -133,9 +212,8 @@ class CodeWriter {
     switch ($segment) {
       case 'constant':
         $this->write([
-          "// push $segment $index",
           // Take the constant
-          "@$index",
+          "@$index // push $segment $index",
           // Write it to D
           "D=A",
           // A=SP
@@ -145,8 +223,7 @@ class CodeWriter {
           "M=D",
           // Bump Stack Pointer
           "@SP",
-          "M=M+1",
-          "// end push $segment $index"
+          "M=M+1 // end push $segment $index",
         ]);
         break;
 
@@ -213,6 +290,7 @@ class VMTranslator {
         }
       }
     }
+    $this->writer->close();
   }
 
   private function outputFile() {
