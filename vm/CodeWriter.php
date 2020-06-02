@@ -185,6 +185,14 @@ class CodeWriter {
         ]);
         break;
 
+      case 'pointer':
+        $register = $this->resolvePointer($index);
+        $this->write([
+          "$register // pointer $index",
+          "D=M"
+        ]);
+        break;
+
       case 'temp':
         $register = $this->resolveTemp($index);
         $this->write([
@@ -255,6 +263,18 @@ class CodeWriter {
         ]);
         break;
 
+      case 'pointer':
+        // pointer points to a 2 register segment holding [this, that]
+        $register = $this->resolvePointer($index);
+        $this->write([
+          "@SP // pop",
+          "AM=M-1",
+          "D=M",
+          $register,
+          "M=D // (L{$this->sourceLine})"
+        ]);
+        break;
+
       case 'temp':
         $tempRegister = $this->resolveTemp($index);
         $this->write([
@@ -269,6 +289,10 @@ class CodeWriter {
         throw new \Exception("Not implemented pop $segment");
         break;
     }
+  }
+
+  private function resolvePointer(Int $index) {
+    return $index == 0 ? '@THIS' : '@THAT';
   }
 
   // Keeping this because book asked me to
