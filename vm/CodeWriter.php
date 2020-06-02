@@ -9,6 +9,10 @@ class CodeWriter {
     $this->file = fopen($outputFile, "w");
   }
 
+  function setInputFileName($inputFileName) {
+    $this->vm = basename($inputFileName, ".vm");
+  }
+
   function nextSourceLine() {
     $this->sourceLine += 1;
   }
@@ -185,6 +189,14 @@ class CodeWriter {
         ]);
         break;
 
+      case 'static':
+        $symbol = $this->resolveStatic($index);
+        $this->write([
+          $symbol,
+          "D=M"
+        ]);
+        break;
+
       case 'pointer':
         $register = $this->resolvePointer($index);
         $this->write([
@@ -239,6 +251,10 @@ class CodeWriter {
       ]);
   }
 
+  private function resolveStatic(Int $index) {
+    return "@{$this->vm}.$index";
+  }
+
   private function writePop(String $segment, Int $index) {
     switch ($segment) {
       // The address is given by LCL+INDEX
@@ -260,6 +276,17 @@ class CodeWriter {
           $lookupRegister,
           "A=M // Read $lookupRegister to A (for $segment $index)",
           "M=D // end pop $segment $index (L{$this->sourceLine})",
+        ]);
+        break;
+
+      case 'static':
+        $symbol = $this->resolveStatic($index);
+        $this->write([
+          "@SP //pop $segment $index",
+          "AM=M-1",
+          "D=M",
+          $symbol,
+          "M=D // end pop $segment $index (L{$this->sourceLine})"
         ]);
         break;
 
