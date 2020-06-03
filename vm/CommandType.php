@@ -5,10 +5,12 @@ namespace captn3m0\NandToTetris;
 class CommandType {
   const PUSH = 1;
   const POP = 2;
+
   // Program Flow Commands
   const LABEL= 3;
   const GOTO= 4;
   const IF= 5;
+
   // Function Calling Commands
   const FUNC= 6;
   const RETURN= 7;

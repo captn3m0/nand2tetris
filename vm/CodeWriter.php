@@ -12,6 +12,68 @@ class CodeWriter {
     $this->fn = null;
   }
 
+  public function writeReturn() {
+    $this->write([
+      // SP=ARG+1
+      "@ARG",
+      "D=M+1",
+      "@SP",
+      "M=D // @SP = ARG+1",
+      // THAT = LCL-1
+      "@LCL",
+      "D=M // D=@LCL",
+      "@THAT",
+      "MD=D-1 // THAT = LCL-1",
+      // THIS = LCL-2
+      "@THIS",
+      "MD=D-1 // THIS = LCL-2",
+      // ARG = LCL-3
+      "@ARG",
+      "MD=D-1 // ARG  = LCL-3",
+      // LCL = LCL-4
+      "@LCL",
+      "MD=D-1 // LCL = LCL-4",
+      "A=D-1 // A = LCL-5",
+      "0;JMP // Jump to *(LCL-5)",
+    ]);
+  }
+
+  public function writeFunction($name, $numArgs) {
+    $this->fn = $name;
+    $this->write([
+      "($name) // function $name $numArgs",
+    ]);
+    for($i=0;$i<$numArgs;$i++) {
+      $this->write([
+        "@SP",
+        "A=M",
+        "M=D",
+        "@SP",
+        "M=M+1"
+      ]);
+    }
+  }
+
+  /**
+   * Writes the preable to initialize the VM
+   */
+  private function writeInit() {
+    $this->write([
+      "@256",
+      "D=A",
+      "@SP",
+      "M=D // initialized SP to 256",
+      "@16000",
+      "D=A",
+      "@LCL",
+      "M=D // initialized @LCL to 16000",
+      "@16500",
+      "D=A",
+      "@ARG",
+      "M=D // initialized @ARG to 16500",
+    ]);
+  }
+
   function setInputFileName($inputFileName) {
     $this->vm = basename($inputFileName, ".vm");
   }

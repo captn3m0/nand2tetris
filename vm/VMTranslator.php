@@ -21,6 +21,10 @@ class VMTranslator {
     $this->writer = new CodeWriter($outputFile);
   }
 
+  /**
+   * This is the main entry point for the VM Translator
+   * and starts the translate sequence
+   */
   function translate() {
     foreach ($this->files as $file) {
       $parser = new Parser($file);
@@ -55,6 +59,16 @@ class VMTranslator {
             $this->writer->writeGoto($label);
             break;
 
+          case CommandType::FUNC:
+            $functionName = $parser->arg1();
+            $numberOfArgs = $parser->arg2();
+            $this->writer->writeFunction($functionName, $numberOfArgs);
+            break;
+
+          case CommandType::RETURN:
+            $this->writer->writeReturn();
+            break;
+
           default:
             throw new \Exception("Not Implemented $command", 1);
             break;
@@ -66,6 +80,10 @@ class VMTranslator {
     $this->writer->close();
   }
 
+  /**
+   * Generates an output file name
+   * for the VM. Same as the Directory.asm
+   */
   private function outputFile() {
     $dir = dirname($this->files[0]);
     $name = basename($dir);
