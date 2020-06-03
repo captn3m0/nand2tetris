@@ -50,6 +50,11 @@ class VMTranslator {
             $this->writer->writeIf($label);
             break;
 
+          case CommandType::GOTO:
+            $label = $parser->arg1();
+            $this->writer->writeGoto($label);
+            break;
+
           default:
             throw new \Exception("Not Implemented $command", 1);
             break;

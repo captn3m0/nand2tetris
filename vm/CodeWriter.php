@@ -57,6 +57,17 @@ class CodeWriter {
   }
 
   /**
+   * Writes a unconditional jump statement
+   */
+  public function writeGoto(String $label) {
+    $globalLabel = $this->resolveLabel($label);
+    $this->write([
+      "@$globalLabel",
+      "0;JMP // end goto $label (L{$this->sourceLine})",
+    ]);
+  }
+
+  /**
    * Writes corresponding code for if-goto
    * if value == true, goto X
    * else keep executing
