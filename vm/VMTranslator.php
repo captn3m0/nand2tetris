@@ -27,11 +27,14 @@ class VMTranslator {
    */
   function translate() {
     foreach ($this->files as $file) {
+
       $parser = new Parser($file);
       $this->writer->setInputFileName($file);
 
       foreach ($parser->commands() as $command) {
+
         $commandType = CommandType::fromName($command);
+
         switch ($commandType) {
           case CommandType::ARITHMETIC:
             $this->writer->writeArithmetic($command);

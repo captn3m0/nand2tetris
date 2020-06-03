@@ -1,3 +1,15 @@
+@256 // init starts
+D=A
+@SP
+M=D // initialized SP to 256
+@300
+D=A
+@LCL
+M=D // initialized @LCL to 300
+@400
+D=A
+@ARG
+M=D // initialized @ARG to 400, init ends
 @ARG // argument 1
 D=M
 @1 // write 1 to A
@@ -192,5 +204,5 @@ M=D // end pop argument 0 (L26)
 @__GLOBAL__.MAIN_LOOP_START
 0;JMP // end goto MAIN_LOOP_START (L27)
 (__GLOBAL__.END_PROGRAM) // end label END_PROGRAM (L28)
-@195
+@207
 0;JMP

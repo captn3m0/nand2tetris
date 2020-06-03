@@ -10,6 +10,9 @@ class CodeWriter {
 
     // We aren't inside a function by default
     $this->fn = null;
+
+    // Write the preamble for the assembler
+    $this->writeInit();
   }
 
   public function writeReturn() {
@@ -76,18 +79,35 @@ class CodeWriter {
     ]);
   }
 
+  /**
+   * Translates the "function" start.
+   * function $name $args
+   */
   public function writeFunction($name, $numArgs) {
+    // This is used for labels within the current function
     $this->fn = $name;
+
     $this->write([
       "($name) // function $name $numArgs",
     ]);
+
+    // We write this once at the top
+    // And for subsequent loops, we can re-use
+    // the @SP call at the end where we bump the stack by 1
+    if ($numArgs > 0) {
+      $this->write([
+        // This is only required for the first argument
+        "@SP", "A=M"
+      ]);
+    }
+
+    // For every argument in the function
+    // push a zero to the stack
     for($i=0;$i<$numArgs;$i++) {
       $this->write([
+        "M=0",
         "@SP",
-        "A=M",
-        "M=D",
-        "@SP",
-        "M=M+1"
+        "AM=M+1",
       ]);
     }
   }
@@ -97,7 +117,7 @@ class CodeWriter {
    */
   private function writeInit() {
     $this->write([
-      "@256",
+      "@256 // init starts",
       "D=A",
       "@SP",
       "M=D // initialized SP to 256",
@@ -108,7 +128,10 @@ class CodeWriter {
       "@400",
       "D=A",
       "@ARG",
-      "M=D // initialized @ARG to 400",
+      "M=D // initialized @ARG to 400, init ends",
+      // We jump to Sys.init
+      "@Sys.init",
+      "0;JMP"
     ]);
   }
 
@@ -486,6 +509,9 @@ class CodeWriter {
     }
   }
 
+  /**
+   * Resolves pointer [0|1] to the this|that register
+   */
   private function resolvePointer(Int $index) {
     return $index == 0 ? '@THIS' : '@THAT';
   }
