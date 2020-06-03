@@ -14,26 +14,64 @@ class CodeWriter {
 
   public function writeReturn() {
     $this->write([
+      "@SP",
+      "A=M-1",
+      "D=M",// Popped value to D
+      // And then write it to *ARG = pop()
+      "@ARG",
+      "A=M",
+      "M=D",
+
       // SP=ARG+1
       "@ARG",
       "D=M+1",
       "@SP",
       "M=D // @SP = ARG+1",
-      // THAT = LCL-1
       "@LCL",
-      "D=M // D=@LCL",
-      "@THAT",
-      "MD=D-1 // THAT = LCL-1",
-      // THIS = LCL-2
-      "@THIS",
-      "MD=D-1 // THIS = LCL-2",
-      // ARG = LCL-3
-      "@ARG",
-      "MD=D-1 // ARG  = LCL-3",
-      // LCL = LCL-4
-      "@LCL",
-      "MD=D-1 // LCL = LCL-4",
-      "A=D-1 // A = LCL-5",
+      "D=M",
+      "@R13",
+      "M=D // Save LCL to R13",
+
+      // now we go restoring THAT, THIS, ARG, LCL
+      "A=D-1 // A=*LCL-1",
+      "D=M // D=*(*LCL-1)",
+      "@THAT // A=THAT",
+      "M=D   // *that = *(*lcl-1)",
+      // now we restore THIS
+      "@R13",
+      "A=M-1",
+      "A=A-1 // A=*LCL-2",
+      "D=M // D=*(*LCL-2)",
+      "@THIS // A=THIS",
+      "M=D   // *THIS = *(*lcl-2)",
+
+      // now we restore ARG
+      "@R13",
+      "A=M-1",
+      "A=A-1",
+      "A=A-1 // A=*LCL-3",
+      "D=M // D=*(*LCL-3)",
+      "@ARG // A=ARG",
+      "M=D   // *ARG = *(*lcl-3)",
+
+      // now we restore LCL
+      "@R13",
+      "A=M-1",
+      "A=A-1",
+      "A=A-1",
+      "A=A-1 // A=*LCL-4",
+      "D=M // D=*(*LCL-4)",
+      "@LCL // A=LCL",
+      "M=D   // *LCL = *(*lcl-4)",
+
+      // Now we hyperjump
+      "@R13",
+      "A=M-1",
+      "A=A-1",
+      "A=A-1",
+      "A=A-1",
+      "A=A-1 // A=*LCL-5",
+      "A=M  // A=*(*LCL-5)",
       "0;JMP // Jump to *(LCL-5)",
     ]);
   }

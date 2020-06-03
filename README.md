@@ -120,6 +120,6 @@ wc -l file.hack
 
 ## Function Calling Commands
 
-- [ ] `SimpleFunction.vm`
+- [x] `SimpleFunction.vm` (128)
 - [ ] `FibonacciElement.vm`
 - [ ] `StaticsTest.vm`
