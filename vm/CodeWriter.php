@@ -7,6 +7,9 @@ class CodeWriter {
     $this->ic = 0;
     $this->sourceLine = 0;
     $this->file = fopen($outputFile, "w");
+
+    // We aren't inside a function by default
+    $this->fn = null;
   }
 
   function setInputFileName($inputFileName) {
@@ -21,11 +24,52 @@ class CodeWriter {
     fclose($this->file);
   }
 
+  /**
+   * Puts the closing non-terminating
+   * loop
+   */
   function close() {
     $endJump = $this->ic+1;
     $this->write([
       "@$endJump",
       "0;JMP"
+    ]);
+  }
+
+  /**
+   * Writes label X as (fnlabel)
+   */
+  function writeLabel(String $label) {
+    $globalLabel = $this->resolveLabel($label);
+    $this->write([
+      "($globalLabel) // end label $label (L{$this->sourceLine})",
+    ]);
+  }
+
+  /**
+   * Generates a unique global label
+   * by using the current function name
+   */
+  private function resolveLabel(String $label) {
+    if($this->fn === null)
+      return "__GLOBAL__.$label";
+    return $this->fn . $label;
+  }
+
+  /**
+   * Writes corresponding code for if-goto
+   * if value == true, goto X
+   * else keep executing
+   */
+  function writeIf(String $label) {
+    $globalLabel = $this->resolveLabel($label);
+    $this->write([
+      // Read top of the stack to D
+      '@SP',
+      'AM=M-1',
+      'D=M',
+      "@$globalLabel",
+      "D;JNE // end if-goto $label (L{$this->sourceLine})",
     ]);
   }
 
@@ -177,7 +221,7 @@ class CodeWriter {
       case 'local':
       case 'this':
       case 'that':
-        $register = $this->segmentToRegister($segment);
+        $register = $this->resolveSegmentToRegister($segment);
         if ($index !== 0) {
           $this->resolveSegmentToR13($segment, $index);
           $register = "@R13";
@@ -230,7 +274,10 @@ class CodeWriter {
     ]);
   }
 
-  private function segmentToRegister(String $segment) {
+  /**
+   * Resolves a given segment to a register
+   */
+  private function resolveSegmentToRegister(String $segment) {
     return [
       'local' => '@LCL',
       'argument' => '@ARG',
@@ -239,8 +286,13 @@ class CodeWriter {
     ][$segment];
   }
 
+  /**
+   * For cases where we need calculations on both LHS and RHS, we temporarily
+   * store the resolved address of the memory segment to R13. This is the code
+   * that does that
+   */
   private function resolveSegmentToR13(string $segment, Int $index) {
-    $register = $this->segmentToRegister($segment);
+    $register = $this->resolveSegmentToRegister($segment);
     $this->write([
         "$register // $segment $index" ,
         "D=M",
@@ -251,6 +303,10 @@ class CodeWriter {
       ]);
   }
 
+  /**
+   * Static variables are just the same labels repeated again
+   * They are unique across a file
+   */
   private function resolveStatic(Int $index) {
     return "@{$this->vm}.$index";
   }
@@ -266,7 +322,7 @@ class CodeWriter {
           $this->resolveSegmentToR13($segment, $index);
           $lookupRegister = '@R13';
         } else{
-          $lookupRegister = $this->segmentToRegister($segment);
+          $lookupRegister = $this->resolveSegmentToRegister($segment);
         }
 
         $this->write([
@@ -312,6 +368,7 @@ class CodeWriter {
           "M=D // end pop temp $index (L{$this->sourceLine})"
         ]);
         break;
+
       default:
         throw new \Exception("Not implemented pop $segment");
         break;

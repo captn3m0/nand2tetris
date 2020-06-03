@@ -115,7 +115,7 @@ wc -l file.hack
 
 ### Program Flow Commands
 
-- [ ] `BasicLoop.vm`
+- [x] `BasicLoop.vm` (93)
 - [ ] `Fibonacci.vm`
 
 ## Function Calling Commands

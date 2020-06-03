@@ -40,6 +40,16 @@ class VMTranslator {
             $this->writer->writePushPop($commandType, $segment, $index);
             break;
 
+          case CommandType::LABEL:
+            $label = $parser->arg1();
+            $this->writer->writeLabel($label);
+            break;
+
+          case CommandType::IF:
+            $label = $parser->arg1();
+            $this->writer->writeIf($label);
+            break;
+
           default:
             throw new \Exception("Not Implemented $command", 1);
             break;
