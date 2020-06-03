@@ -72,6 +72,12 @@ class VMTranslator {
             $this->writer->writeReturn();
             break;
 
+          case CommandType::CALL:
+            $functionName = $parser->arg1();
+            $numberOfArgs = $parser->arg2();
+            $this->writer->writeCall($functionName, $numberOfArgs);
+            break;
+
           default:
             throw new \Exception("Not Implemented $command", 1);
             break;

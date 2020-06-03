@@ -113,6 +113,77 @@ class CodeWriter {
   }
 
   /**
+   * Function call executed, save state and JUMP
+   */
+  public function writeCall(String $functionName, $numArgs) {
+
+    $label = bin2hex(random_bytes(16));
+
+    // push the label to top of the stack
+    $this->write([
+      "@$label",
+      "D=A",
+      "@SP",
+      "A=M",
+      "M=D",
+      "@SP",
+      "M=M+1"
+    ]);
+
+    $pushes = [
+      "@LCL",
+      "@ARG",
+      "@THIS",
+      "@THAT",
+    ];
+
+    // TODO: optimize this by saving LCL, ARG
+    // then doing the SP-n-5 calculation (since that will be much faster)
+    // and then updating ARG
+    foreach ($pushes as $lookupRegister) {
+      $this->write([
+        "$lookupRegister // Read $lookupRegister to A",
+        "D=M // Put $lookupRegister to D",
+        "@SP",
+        "A=M",
+        "M=D // Save $lookupRegister to SP",
+        "@SP",
+        "M=M+1",
+      ]);
+    }
+
+    // Load current stackpointer to D
+    $this->write([
+      "@SP",
+      "D=M",
+    ]);
+
+    // Write current stackpointer to LCL
+    $this->write([
+      "@LCL",
+      "M=D",
+    ]);
+
+    // Reduce D height times = numArgs+5
+    $height = $numArgs + 5;
+    for ($i=0; $i < $height; $i++) {
+      $this->write([
+        "D=D-1",
+      ]);
+    }
+
+    // now D = SP-n-5
+    // now we need to write D to ARG
+    $this->write([
+      "@ARG",
+      "M=D",
+      "@$functionName // Jump to $functionName",
+      "0;JMP",
+      "($label) // return back from function here",
+    ]);
+  }
+
+  /**
    * Writes the preable to initialize the VM
    */
   private function writeInit() {
