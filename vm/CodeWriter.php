@@ -29,7 +29,7 @@ class CodeWriter {
     ]);
   }
 
-  function writeArithmetic(String $command ) {
+  function writeArithmetic(String $command) {
     $stackDecrease=true;
     // Read top of stack to D
     $this->write([

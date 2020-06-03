@@ -94,7 +94,6 @@ Counting number of instructions by `wc -l $file.hack`
 
 Final hack instruction set count in brackets. Calculated by running:
 
-
 ```
 php file.vm > file.asm
 ruby assembler.rb file.vm > file.hack
@@ -103,11 +102,24 @@ wc -l file.hack
 
 ### Arithmetic Commands
 
-- [x] SimpleAdd.vm (21)
-- [x] StackTest.vm (334)
+- [x] `SimpleAdd.vm` (21)
+- [x] `StackTest.vm` (334)
 
 ### Memory Access Commands
 
-- [x] BasicTest.vm (228)
-- [x] PointerTest.vm (127)
-- [ ] StackTest.vm
+- [x] `BasicTest.vm` (228)
+- [x] `PointerTest.vm` (127)
+- [x] `StackTest.vm` (73)
+
+## [Project 7: Virtual Machine II - Program Control](https://www.nand2tetris.org/project07)
+
+### Program Flow Commands
+
+- [ ] `BasicLoop.vm`
+- [ ] `Fibonacci.vm`
+
+## Function Calling Commands
+
+- [ ] `SimpleFunction.vm`
+- [ ] `FibonacciElement.vm`
+- [ ] `StaticsTest.vm`

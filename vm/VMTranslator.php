@@ -58,7 +58,6 @@ class VMTranslator {
   }
 }
 
-
 if(isset($argv[1])) {
   $vmt = new VMTranslator($argv[1]);
   $vmt->translate();
