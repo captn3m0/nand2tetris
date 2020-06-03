@@ -101,14 +101,14 @@ class CodeWriter {
       "D=A",
       "@SP",
       "M=D // initialized SP to 256",
-      "@16000",
+      "@300",
       "D=A",
       "@LCL",
-      "M=D // initialized @LCL to 16000",
-      "@16500",
+      "M=D // initialized @LCL to 300",
+      "@400",
       "D=A",
       "@ARG",
-      "M=D // initialized @ARG to 16500",
+      "M=D // initialized @ARG to 400",
     ]);
   }
 
