@@ -68,3 +68,9 @@ I think there are definitely some tricks with reducing lookup table sizes, but I
 # VM (1)
 
 See `vm/README.md` for more details. Observations go here, implementation notes are there.
+
+# VM (2)
+
+Learnt quite a lot. Interesting gotchas:
+
+1. Stack manipuation is hard. Keeping track of registers is hard. I was going by the diagrams which always have "arguments" going from 0..n, which screws up the one case where you don't have arguments for a function, and ARG points to the same location where the return address is stored. In case the VM writes the return value to ARG[0], and you have zero arguments - it will also overwrite the return address, and your whole stack will go haywire (I got cool designs on my screen because of this).

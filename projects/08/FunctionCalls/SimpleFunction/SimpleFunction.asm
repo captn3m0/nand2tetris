@@ -1,14 +1,12 @@
 (SimpleFunction.test) // function SimpleFunction.test 2
 @SP
 A=M
-M=D
+M=0
 @SP
-M=M+1
+AM=M+1
+M=0
 @SP
-A=M
-M=D
-@SP
-M=M+1
+AM=M+1
 @LCL
 A=M
 D=M
@@ -16,7 +14,7 @@ D=M
 A=M
 M=D
 @SP
-M=M+1 // end push local 0 (L1)
+M=M+1
 @LCL // local 1
 D=M
 @1 // write 1 to A
@@ -30,18 +28,18 @@ D=M
 A=M
 M=D
 @SP
-M=M+1 // end push local 1 (L2)
+M=M+1
 @SP // ==== add ====
 A=M-1
 D=M
 A=A-1
 M=D+M
 @SP
-M=M-1 // end add (L3)
+M=M-1 // end add
 @SP // ==== not ====
 A=M-1
 D=M
-M=!M // end not (L4)
+M=!M // end not
 @ARG
 A=M
 D=M
@@ -49,14 +47,14 @@ D=M
 A=M
 M=D
 @SP
-M=M+1 // end push argument 0 (L5)
+M=M+1
 @SP // ==== add ====
 A=M-1
 D=M
 A=A-1
 M=D+M
 @SP
-M=M-1 // end add (L6)
+M=M-1 // end add
 @ARG // argument 1
 D=M
 @1 // write 1 to A
@@ -70,15 +68,15 @@ D=M
 A=M
 M=D
 @SP
-M=M+1 // end push argument 1 (L7)
+M=M+1
 @SP // ==== sub ====
 A=M-1
 D=M
 A=A-1
 M=M-D
 @SP
-M=M-1 // end sub (L8)
-@SP
+M=M-1 // end sub
+@SP // return for SimpleFunction.test starts
 A=M-1
 D=M
 @ARG
@@ -91,7 +89,7 @@ M=D // @SP = ARG+1
 @LCL
 D=M
 @R13
-M=D // Save LCL to R13
+M=D // Save LCL to R13 = FRAME
 A=D-1 // A=*LCL-1
 D=M // D=*(*LCL-1)
 @THAT // A=THAT
@@ -123,7 +121,7 @@ A=A-1
 A=A-1
 A=A-1
 A=A-1 // A=*LCL-5
-A=M  // A=*(*LCL-5)
-0;JMP // Jump to *(LCL-5)
-@128
+A=M  // A now holds the return address
+0;JMP // HyperJump to *(LCL-5)
+@125
 0;JMP

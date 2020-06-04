@@ -11,16 +11,85 @@ class CodeWriter {
     // We aren't inside a function by default
     $this->fn = null;
 
+    $this->comments = true;
+
     // Write the preamble for the assembler
     $this->writeInit();
   }
 
+  private function push($kind, $what, $direct = false) {
+    if ($kind === 'register') {
+      assert(in_array($what, [
+        'SP','LCL','ARG','THIS','THAT',
+        'R0','R1','R2','R3','R4','R5',
+        'R6','R7','R8','R9','R10','R11'
+        ,'R12','R13','R14','R15' , 'D', 'A']
+      ));
+
+      switch ($what) {
+        // A Can be optimized
+        case 'A':
+          $direct = true;
+          $this->write(['D=A']);
+          break;
+        case 'D':
+          $direct = true;
+          break;
+
+        default:
+          $this->write([
+            "@$what",
+            "AD=M",
+          ]);
+          break;
+      }
+
+      if ($direct === false) {
+        $this->write(["D=M"]);
+      }
+    } else if ($kind === 'label') {
+      $this->write([
+        "@$what",
+        "D=A"
+      ]);
+    }
+
+    $this->writeDtoSPAndBump();
+  }
+
+  private function writeDtoSPAndBump() {
+    $this->write([
+      "@SP",
+      "A=M",
+      "M=D",
+    ]);
+
+    $this->increaseSP();
+  }
+
+  private function increaseSP() {
+    $this->write([
+      "@SP",
+      "M=M+1",
+    ]);
+  }
+
   public function writeReturn() {
     $this->write([
-      '@SP',
+      '@LCL // save return address first',
+      'A=M-1',
+      'A=A-1',
+      'A=A-1',
+      'A=A-1',
+      'A=A-1',
+      'D=M // D now holds the return address',
+      '@R14',
+      'M=D // Wrote the return address to R14',
+
+      "@SP // return for {$this->fn} starts",
       'A=M-1',
       'D=M',// Popped value to D
-      // And then write it to *ARG = pop()
+      // And then write it to R14
       '@ARG',
       'A=M',
       'M=D',
@@ -33,13 +102,14 @@ class CodeWriter {
       '@LCL',
       'D=M',
       '@R13',
-      'M=D // Save LCL to R13',
+      'M=D // Save LCL to R13 = FRAME',
 
       // now we go restoring THAT, THIS, ARG, LCL
       'A=D-1 // A=*LCL-1',
       'D=M // D=*(*LCL-1)',
       '@THAT // A=THAT',
       'M=D   // *that = *(*lcl-1)',
+
       // now we restore THIS
       '@R13',
       'A=M-1',
@@ -68,14 +138,9 @@ class CodeWriter {
       'M=D   // *LCL = *(*lcl-4)',
 
       // Now we hyperjump
-      '@R13',
-      'A=M-1',
-      'A=A-1',
-      'A=A-1',
-      'A=A-1',
-      'A=A-1 // A=*LCL-5',
-      'A=M  // A=*(*LCL-5)',
-      '0;JMP // Jump to *(LCL-5)',
+      '@R14',
+      'A=M',
+      '0;JMP // HyperJump to *(LCL-5)',
     ]);
   }
 
@@ -113,92 +178,99 @@ class CodeWriter {
     }
   }
 
+  private function copy($registerA, $registerB) {
+    $this->write([
+      "@$registerA",
+      'D=M',
+      "@$registerB",
+      "M=D // Update $registerB=$registerA",
+    ]);
+  }
+
+  private function loadOffsetToD($register, $offset, $sign = '-') {
+    $this->write([
+      "@$register",
+      "D=M",
+    ]);
+
+    for ($i=0; $i < $offset; $i++) {
+      $this->write([
+        'D=D' . $sign . "1 // should repeat $offset times",
+      ]);
+    }
+  }
+
   /**
    * Function call executed, save state and JUMP
    */
   public function writeCall(String $functionName, $numArgs) {
+    $returnLabel = bin2hex(random_bytes(16));
 
-    $label = bin2hex(random_bytes(16));
+    $this->push('label', $returnLabel);
 
-    // push the label to top of the stack
-    $this->write([
-      "@$label // call $functionName $numArgs start",
-      'D=A',
-      '@SP',
-      'A=M',
-      'M=D',
-      '@SP',
-      'M=M+1',
-    ]);
-
-    $pushes = [
-      '@LCL',
-      '@ARG',
-      '@THIS',
-      '@THAT',
-    ];
-
-    // TODO: optimize this by saving LCL, ARG
-    // then doing the SP-n-5 calculation (since that will be much faster)
-    // and then updating ARG
-    foreach ($pushes as $lookupRegister) {
-      $this->write([
-        "$lookupRegister // Read $lookupRegister to A",
-        "D=M // Put $lookupRegister to D",
-        '@SP',
-        'A=M',
-        "M=D // Save $lookupRegister to SP",
-        '@SP',
-        "M=M+1 // end $lookupRegister pushed to SP",
-      ]);
-    }
-
-    // Load current stackpointer to D
-    // and write it to LCL
-    $this->write([
-      '@SP',
-      'D=M',
-      '@LCL',
-      'M=D // Update LCL=SP',
-    ]);
+    // push the exact values that these registers are holding
+    $this->push('register', 'LCL', true);
+    $this->push('register', 'ARG', true);
+    $this->push('register', 'THIS', true);
+    $this->push('register', 'THAT', true);
+    $this->copy('SP', 'LCL');
 
     // Reduce D height times = numArgs+5
-    $height = $numArgs + 5;
-    for ($i=0; $i < $height; $i++) {
-      $this->write([
-        "D=D-1 // should repeat $height times",
-      ]);
-    }
+    $offset = $numArgs + 5;
 
+    $this->loadOffsetToD('SP', $offset, '-');
     // now D = SP-n-5
+
     // now we need to write D to ARG
     $this->write([
-      '@ARG // write D to ARG',
+      '@ARG // write SP-$offset to ARG',
       'M=D',
       "@$functionName // Jump to $functionName",
       '0;JMP',
-      "($label) // return back from function here (CALL ENDS)",
+      "($returnLabel) // return back from function here (CALL ENDS)",
+    ]);
+
+    // If we have returned from the Sys.init function call
+    // then put an infinite loop here
+    if ($functionName === "Sys.init") {
+      $this->write([
+        '(__GLOBAL_TERMINATE__)',
+        '@__GLOBAL_TERMINATE__',
+        '0;JMP',
+      ]);
+    }
+  }
+
+  private function writeConstantToRegister(String $register, Int $constant) {
+    if ($constant < 0) {
+      $constant = abs($constant);
+      $this->write([
+        "@$constant",
+        "D=-A"
+      ]);
+    } else if ($constant === 0) {
+      $this->write(["D=0"]);
+    } else {
+      $this->write([
+        "@$constant",
+        "D=A"
+      ]);
+    }
+    $this->write([
+      "@$register",
+      "M=D // initialized $register to $constant",
     ]);
   }
 
   /**
    * Writes the preable to initialize the VM
    */
-  private function writeInit() {
-    $this->write([
-      '@256 // init starts',
-      'D=A',
-      '@SP',
-      'M=D // initialized SP to 256',
-      '@3000',
-      'D=A',
-      '@LCL',
-      'M=D // initialized @LCL to 3000',
-      '@4000',
-      'D=A',
-      '@ARG',
-      'M=D // initialized @ARG to 4000, init ends',
-    ]);
+  private function writeInit($initExists = true) {
+    $this->writeConstantToRegister("SP", 256);
+    $this->writeConstantToRegister("LCL", -1);
+    $this->writeConstantToRegister("ARG", -2);
+    $this->writeConstantToRegister("THIS", -3);
+    $this->writeConstantToRegister("THAT", -4);
 
     $this->writeCall('Sys.init', 0);
   }
@@ -275,6 +347,58 @@ class CodeWriter {
     ]);
   }
 
+  private function binaryMath(String $command) {
+    $map = [
+      'sub' => '-',
+      'add' => '+',
+      'and' => '&',
+      'or'  => '|'
+    ];
+
+    $symbol = $map[$command];
+
+    $this->write([
+      'A=A-1',
+      "M=D{$symbol}M",
+    ]);
+
+    if ($command === 'sub') {
+      $this->write([
+        'M=-M'
+      ]);
+    }
+  }
+
+  private function unaryMath(String $command) {
+    $symbol = [
+      'neg' => '-',
+      'not' => '!'
+    ][$command];
+
+    $this->write([
+      "M={$symbol}M // end $command",
+    ]);
+  }
+
+  private function booleanCompare(String $compare) {
+    $compare = strtoupper($compare);
+    $command = "D;J$compare";
+
+    $jumpPointer = $this->ic+10;
+    $this->write([
+      'A=A-1',
+      'D=M-D',
+      'M=0',
+      'M=M-1',
+      "@$jumpPointer",
+      $command,
+      '@SP',
+      'A=M-1',
+      'A=A-1',
+      'M=0',
+    ]);
+  }
+
   function writeArithmetic(String $command) {
     $stackDecrease=true;
     // Read top of stack to D
@@ -288,101 +412,27 @@ class CodeWriter {
       // TODO: Combine all the binary math commands into one
       // And the unary math commands into one
       case 'sub':
-        $this->write([
-          'A=A-1',
-          'M=M-D',
-        ]);
-        break;
-
       case 'add':
-        // But add it to previous D this time
-        $this->write([
-          'A=A-1',
-          'M=D+M'
-        ]);
+      case 'and':
+      case 'or':
+        $this->binaryMath($command);
         break;
 
       case 'neg':
-        $this->write([
-          "M=-M // end $command",
-        ]);
-        $stackDecrease = false;
-        break;
-
-
       case 'not':
-        $this->write([
-          "M=!M // end $command",
-        ]);
+        $this->unaryMath($command);
         $stackDecrease = false;
-        break;
-
-      case 'and':
-        $this->write([
-          'A=A-1',
-          'M=D&M',
-        ]);
-        break;
-
-      case 'or':
-        $this->write([
-          'A=A-1',
-          'M=D|M',
-        ]);
         break;
 
       // TODO: Combine all the boolean commands
       case 'lt':
-        $jumpPointer = $this->ic+11;
-        $this->write([
-          'A=A-1',
-          'D=M-D',
-          'M=0',
-          'M=M-1',
-          "@$jumpPointer",
-          'D;JLT',
-          '@SP',
-          'A=M-1',
-          'A=A-1',
-          'M=0',
-        ]);
-        break;
-
       case 'gt':
-        $jumpPointer = $this->ic+11;
-        $this->write([
-          'A=A-1',
-          'D=M-D',
-          'M=0',
-          'M=M-1',
-          "@$jumpPointer",
-          "D;JGT",
-          '@SP',
-          'A=M-1',
-          'A=A-1',
-          'M=0',
-        ]);
-        break;
-
       case 'eq':
-        $jumpPointer = $this->ic+11;
-        $this->write([
-          'A=A-1',
-          'D=M-D',
-          'M=0',
-          'M=M-1',
-          "@{$jumpPointer}",
-          'D;JEQ',
-          '@SP',
-          'A=M-1',
-          'A=A-1',
-          'M=0',
-        ]);
+        $this->booleanCompare($command);
         break;
 
       default:
         throw new \Exception("$command not Implemented", 1);
-
     }
 
     if ($stackDecrease) {
@@ -394,8 +444,18 @@ class CodeWriter {
   }
 
   private function write(Array $lines) {
+    // print_r(debug_backtrace());
+    // exit(1);
+    $callingLine = debug_backtrace()[0]['line'];
+    $callingFunction = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)[1]['function'];
+    $args = join(", ", debug_backtrace(false, 2)[1]['args']);
     foreach ($lines as $line) {
-      fwrite($this->file, "$line // (L{$this->sourceLine}:{$this->ic})\n");
+      if ($this->comments === true ) {
+        $line = "$line \t\t\t\t// (L{$this->sourceLine}:{$this->ic}) ($callingFunction($args):$callingLine)\n";
+      } else {
+        $line = "$line\n";
+      }
+      fwrite($this->file, $line);
       if (substr($line, 0, 2) !== "//" and substr($line, 0, 1) !== "(") {
         $this->ic += 1;
       }
@@ -464,16 +524,7 @@ class CodeWriter {
         break;
     }
 
-    $this->write([
-      // A=SP
-      "@SP",
-      "A=M",
-      // Write D to SP
-      "M=D",
-      // Bump Stack Pointer
-      "@SP",
-      "M=M+1 // end push $segment $index",
-    ]);
+    $this->writeDtoSPAndBump();
   }
 
   /**
@@ -581,7 +632,7 @@ class CodeWriter {
    * Resolves pointer [0|1] to the this|that register
    */
   private function resolvePointer(Int $index) {
-    return $index == 0 ? '@THIS' : '@THAT';
+    return ($index === 0) ? '@THIS' : '@THAT';
   }
 
   // Keeping this because book asked me to

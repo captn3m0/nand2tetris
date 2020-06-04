@@ -94,9 +94,15 @@ class Code
   end
 
   def self.comp(str)
-    str.strip!
-    key = str.gsub(/[AM]/, 'Y')
-    (str.include?('M') ? '1' : '0') + COMP_MAP[key]
+    begin
+      str.strip!
+      key = str.gsub(/[AM]/, 'Y')
+      (str.include?('M') ? '1' : '0') + COMP_MAP[key]
+    rescue Exception => e
+      puts "failed at #{key}: #{str}"
+      exit
+    end
+
   end
 end
 

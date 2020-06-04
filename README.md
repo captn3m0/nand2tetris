@@ -121,5 +121,6 @@ wc -l file.hack
 ## Function Calling Commands
 
 - [x] `SimpleFunction.vm` (128)
-- [ ] `FibonacciElement.vm`
-- [ ] `StaticsTest.vm`
+- [x] `FibonacciElement` (434)
+- [x] `NestedCall.vm` (556)
+- [x] `StaticsTest.vm` (664)

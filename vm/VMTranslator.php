@@ -98,9 +98,16 @@ class VMTranslator {
     $name = basename($dir);
     return "$dir/$name.asm";
   }
+
+  public function disableComments() {
+    $this->writer->comments = false;
+  }
 }
 
 if(isset($argv[1])) {
   $vmt = new VMTranslator($argv[1]);
+  if (isset($argv[2]) and $argv[2] === "--no-comments") {
+    $vmt->disableComments();
+  }
   $vmt->translate();
 }

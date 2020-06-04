@@ -4,31 +4,31 @@ D=A
 A=M
 M=D
 @SP
-M=M+1 // end push constant 3030 (L0)
+M=M+1
 @SP // pop
 AM=M-1
 D=M
 @THIS
-M=D // (L1)
+M=D //
 @3040 // push constant 3040
 D=A
 @SP
 A=M
 M=D
 @SP
-M=M+1 // end push constant 3040 (L2)
+M=M+1
 @SP // pop
 AM=M-1
 D=M
 @THAT
-M=D // (L3)
+M=D //
 @32 // push constant 32
 D=A
 @SP
 A=M
 M=D
 @SP
-M=M+1 // end push constant 32 (L4)
+M=M+1
 @THIS // this 2
 D=M
 @2 // write 2 to A
@@ -40,14 +40,14 @@ AM=M-1
 D=M
 @R13
 A=M // Read @R13 to A (for this 2)
-M=D // end pop this 2 (L5)
+M=D // end pop this 2
 @46 // push constant 46
 D=A
 @SP
 A=M
 M=D
 @SP
-M=M+1 // end push constant 46 (L6)
+M=M+1
 @THAT // that 6
 D=M
 @6 // write 6 to A
@@ -59,28 +59,28 @@ AM=M-1
 D=M
 @R13
 A=M // Read @R13 to A (for that 6)
-M=D // end pop that 6 (L7)
+M=D // end pop that 6
 @THIS // pointer 0
 D=M
 @SP
 A=M
 M=D
 @SP
-M=M+1 // end push pointer 0 (L8)
+M=M+1
 @THAT // pointer 1
 D=M
 @SP
 A=M
 M=D
 @SP
-M=M+1 // end push pointer 1 (L9)
+M=M+1
 @SP // ==== add ====
 A=M-1
 D=M
 A=A-1
 M=D+M
 @SP
-M=M-1 // end add (L10)
+M=M-1 // end add
 @THIS // this 2
 D=M
 @2 // write 2 to A
@@ -94,14 +94,14 @@ D=M
 A=M
 M=D
 @SP
-M=M+1 // end push this 2 (L11)
+M=M+1
 @SP // ==== sub ====
 A=M-1
 D=M
 A=A-1
 M=M-D
 @SP
-M=M-1 // end sub (L12)
+M=M-1 // end sub
 @THAT // that 6
 D=M
 @6 // write 6 to A
@@ -115,13 +115,13 @@ D=M
 A=M
 M=D
 @SP
-M=M+1 // end push that 6 (L13)
+M=M+1
 @SP // ==== add ====
 A=M-1
 D=M
 A=A-1
 M=D+M
 @SP
-M=M-1 // end add (L14)
+M=M-1 // end add
 @126
 0;JMP
