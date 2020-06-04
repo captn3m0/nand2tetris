@@ -1,370 +1,417 @@
-@256 // init starts
-D=A
-@SP
-M=D // initialized SP to 256
-@300
-D=A
-@LCL
-M=D // initialized @LCL to 300
-@400
-D=A
-@ARG
-M=D // initialized @ARG to 400, init ends
-@Sys.init
-0;JMP
-(Main.fibonacci) // function Main.fibonacci 0
-@ARG
-A=M
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push argument 0 (L1)
-@2 // push constant 2
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push constant 2 (L2)
-@SP // ==== lt ====
-A=M-1
-D=M
-A=A-1
-D=M-D
-M=0
-M=M-1
-@43
-D;JLT
-@SP
-A=M-1
-A=A-1
-M=0
-@SP
-M=M-1 // end lt (L3)
-@SP
-AM=M-1
-D=M
-@Main.fibonacciIF_TRUE
-D;JNE // end if-goto IF_TRUE (L4)
-@Main.fibonacciIF_FALSE
-0;JMP // end goto IF_FALSE (L5)
-(Main.fibonacciIF_TRUE) // end label IF_TRUE (L6)
-@ARG
-A=M
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push argument 0 (L7)
-@SP
-A=M-1
-D=M
-@ARG
-A=M
-M=D
-@ARG
-D=M+1
-@SP
-M=D // @SP = ARG+1
-@LCL
-D=M
-@R13
-M=D // Save LCL to R13
-A=D-1 // A=*LCL-1
-D=M // D=*(*LCL-1)
-@THAT // A=THAT
-M=D   // *that = *(*lcl-1)
-@R13
-A=M-1
-A=A-1 // A=*LCL-2
-D=M // D=*(*LCL-2)
-@THIS // A=THIS
-M=D   // *THIS = *(*lcl-2)
-@R13
-A=M-1
-A=A-1
-A=A-1 // A=*LCL-3
-D=M // D=*(*LCL-3)
-@ARG // A=ARG
-M=D   // *ARG = *(*lcl-3)
-@R13
-A=M-1
-A=A-1
-A=A-1
-A=A-1 // A=*LCL-4
-D=M // D=*(*LCL-4)
-@LCL // A=LCL
-M=D   // *LCL = *(*lcl-4)
-@R13
-A=M-1
-A=A-1
-A=A-1
-A=A-1
-A=A-1 // A=*LCL-5
-A=M  // A=*(*LCL-5)
-0;JMP // Jump to *(LCL-5)
-(Main.fibonacciIF_FALSE) // end label IF_FALSE (L9)
-@ARG
-A=M
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push argument 0 (L10)
-@2 // push constant 2
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push constant 2 (L11)
-@SP // ==== sub ====
-A=M-1
-D=M
-A=A-1
-M=M-D
-@SP
-M=M-1 // end sub (L12)
-@5fd25fdab54b4bfd5a91536ecfd6806e
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@LCL // Read @LCL to A
-D=M // Put @LCL to D
-@SP
-A=M
-M=D // Save @LCL to SP
-@SP
-M=M+1
-@ARG // Read @ARG to A
-D=M // Put @ARG to D
-@SP
-A=M
-M=D // Save @ARG to SP
-@SP
-M=M+1
-@THIS // Read @THIS to A
-D=M // Put @THIS to D
-@SP
-A=M
-M=D // Save @THIS to SP
-@SP
-M=M+1
-@THAT // Read @THAT to A
-D=M // Put @THAT to D
-@SP
-A=M
-M=D // Save @THAT to SP
-@SP
-M=M+1
-@SP
-D=M
-@LCL
-M=D
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-@ARG
-M=D
-@Main.fibonacci // Jump to Main.fibonacci
-0;JMP
-(5fd25fdab54b4bfd5a91536ecfd6806e) // return back from function here
-@ARG
-A=M
-D=M
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push argument 0 (L14)
-@1 // push constant 1
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push constant 1 (L15)
-@SP // ==== sub ====
-A=M-1
-D=M
-A=A-1
-M=M-D
-@SP
-M=M-1 // end sub (L16)
-@a954c9cff71cdccc09f4338e60df6394
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@LCL // Read @LCL to A
-D=M // Put @LCL to D
-@SP
-A=M
-M=D // Save @LCL to SP
-@SP
-M=M+1
-@ARG // Read @ARG to A
-D=M // Put @ARG to D
-@SP
-A=M
-M=D // Save @ARG to SP
-@SP
-M=M+1
-@THIS // Read @THIS to A
-D=M // Put @THIS to D
-@SP
-A=M
-M=D // Save @THIS to SP
-@SP
-M=M+1
-@THAT // Read @THAT to A
-D=M // Put @THAT to D
-@SP
-A=M
-M=D // Save @THAT to SP
-@SP
-M=M+1
-@SP
-D=M
-@LCL
-M=D
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-@ARG
-M=D
-@Main.fibonacci // Jump to Main.fibonacci
-0;JMP
-(a954c9cff71cdccc09f4338e60df6394) // return back from function here
-@SP // ==== add ====
-A=M-1
-D=M
-A=A-1
-M=D+M
-@SP
-M=M-1 // end add (L18)
-@SP
-A=M-1
-D=M
-@ARG
-A=M
-M=D
-@ARG
-D=M+1
-@SP
-M=D // @SP = ARG+1
-@LCL
-D=M
-@R13
-M=D // Save LCL to R13
-A=D-1 // A=*LCL-1
-D=M // D=*(*LCL-1)
-@THAT // A=THAT
-M=D   // *that = *(*lcl-1)
-@R13
-A=M-1
-A=A-1 // A=*LCL-2
-D=M // D=*(*LCL-2)
-@THIS // A=THIS
-M=D   // *THIS = *(*lcl-2)
-@R13
-A=M-1
-A=A-1
-A=A-1 // A=*LCL-3
-D=M // D=*(*LCL-3)
-@ARG // A=ARG
-M=D   // *ARG = *(*lcl-3)
-@R13
-A=M-1
-A=A-1
-A=A-1
-A=A-1 // A=*LCL-4
-D=M // D=*(*LCL-4)
-@LCL // A=LCL
-M=D   // *LCL = *(*lcl-4)
-@R13
-A=M-1
-A=A-1
-A=A-1
-A=A-1
-A=A-1 // A=*LCL-5
-A=M  // A=*(*LCL-5)
-0;JMP // Jump to *(LCL-5)
-(Sys.init) // function Sys.init 0
-@4 // push constant 4
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1 // end push constant 4 (L21)
-@dd19df789547baebfea110998cdf5713
-D=A
-@SP
-A=M
-M=D
-@SP
-M=M+1
-@LCL // Read @LCL to A
-D=M // Put @LCL to D
-@SP
-A=M
-M=D // Save @LCL to SP
-@SP
-M=M+1
-@ARG // Read @ARG to A
-D=M // Put @ARG to D
-@SP
-A=M
-M=D // Save @ARG to SP
-@SP
-M=M+1
-@THIS // Read @THIS to A
-D=M // Put @THIS to D
-@SP
-A=M
-M=D // Save @THIS to SP
-@SP
-M=M+1
-@THAT // Read @THAT to A
-D=M // Put @THAT to D
-@SP
-A=M
-M=D // Save @THAT to SP
-@SP
-M=M+1
-@SP
-D=M
-@LCL
-M=D
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-D=D-1
-@ARG
-M=D
-@Main.fibonacci // Jump to Main.fibonacci
-0;JMP
-(dd19df789547baebfea110998cdf5713) // return back from function here
-(Sys.initWHILE) // end label WHILE (L23)
-@Sys.initWHILE
-0;JMP // end goto WHILE (L24)
-@369
-0;JMP
+@256 // init starts // (L0:0)
+D=A // (L0:1)
+@SP // (L0:2)
+M=D // initialized SP to 256 // (L0:3)
+@3000 // (L0:4)
+D=A // (L0:5)
+@LCL // (L0:6)
+M=D // initialized @LCL to 3000 // (L0:7)
+@4000 // (L0:8)
+D=A // (L0:9)
+@ARG // (L0:10)
+M=D // initialized @ARG to 4000, init ends // (L0:11)
+@18d95170022c2d762027b64da6c88d0a // call Sys.init 0 start // (L0:12)
+D=A // (L0:13)
+@SP // (L0:14)
+A=M // (L0:15)
+M=D // (L0:16)
+@SP // (L0:17)
+M=M+1 // (L0:18)
+@LCL // Read @LCL to A // (L0:19)
+D=M // Put @LCL to D // (L0:20)
+@SP // (L0:21)
+A=M // (L0:22)
+M=D // Save @LCL to SP // (L0:23)
+@SP // (L0:24)
+M=M+1 // end @LCL pushed to SP // (L0:25)
+@ARG // Read @ARG to A // (L0:26)
+D=M // Put @ARG to D // (L0:27)
+@SP // (L0:28)
+A=M // (L0:29)
+M=D // Save @ARG to SP // (L0:30)
+@SP // (L0:31)
+M=M+1 // end @ARG pushed to SP // (L0:32)
+@THIS // Read @THIS to A // (L0:33)
+D=M // Put @THIS to D // (L0:34)
+@SP // (L0:35)
+A=M // (L0:36)
+M=D // Save @THIS to SP // (L0:37)
+@SP // (L0:38)
+M=M+1 // end @THIS pushed to SP // (L0:39)
+@THAT // Read @THAT to A // (L0:40)
+D=M // Put @THAT to D // (L0:41)
+@SP // (L0:42)
+A=M // (L0:43)
+M=D // Save @THAT to SP // (L0:44)
+@SP // (L0:45)
+M=M+1 // end @THAT pushed to SP // (L0:46)
+@SP // (L0:47)
+D=M // (L0:48)
+@LCL // (L0:49)
+M=D // Update LCL=SP // (L0:50)
+D=D-1 // should repeat 5 times // (L0:51)
+D=D-1 // should repeat 5 times // (L0:52)
+D=D-1 // should repeat 5 times // (L0:53)
+D=D-1 // should repeat 5 times // (L0:54)
+D=D-1 // should repeat 5 times // (L0:55)
+@ARG // write D to ARG // (L0:56)
+M=D // (L0:57)
+@Sys.init // Jump to Sys.init // (L0:58)
+0;JMP // (L0:59)
+(18d95170022c2d762027b64da6c88d0a) // return back from function here (CALL ENDS) // (L0:60)
+(Main.fibonacci) // function Main.fibonacci 0 // (L0:60)
+@ARG // (L1:60)
+A=M // (L1:61)
+D=M // (L1:62)
+@SP // (L1:63)
+A=M // (L1:64)
+M=D // (L1:65)
+@SP // (L1:66)
+M=M+1 // end push argument 0 // (L1:67)
+@2 // push constant 2 // (L2:68)
+D=A // (L2:69)
+@SP // (L2:70)
+A=M // (L2:71)
+M=D // (L2:72)
+@SP // (L2:73)
+M=M+1 // end push constant 2 // (L2:74)
+@SP // ==== lt ==== // (L3:75)
+A=M-1 // (L3:76)
+D=M // (L3:77)
+A=A-1 // (L3:78)
+D=M-D // (L3:79)
+M=0 // (L3:80)
+M=M-1 // (L3:81)
+@89 // (L3:82)
+D;JLT // (L3:83)
+@SP // (L3:84)
+A=M-1 // (L3:85)
+A=A-1 // (L3:86)
+M=0 // (L3:87)
+@SP // (L3:88)
+M=M-1 // end lt // (L3:89)
+@SP // (L4:90)
+AM=M-1 // (L4:91)
+D=M // (L4:92)
+@Main.fibonacciIF_TRUE // (L4:93)
+D;JNE // end if-goto IF_TRUE // (L4:94)
+@Main.fibonacciIF_FALSE // (L5:95)
+0;JMP // end goto IF_FALSE // (L5:96)
+(Main.fibonacciIF_TRUE) // end label IF_TRUE // (L6:97)
+@ARG // (L7:97)
+A=M // (L7:98)
+D=M // (L7:99)
+@SP // (L7:100)
+A=M // (L7:101)
+M=D // (L7:102)
+@SP // (L7:103)
+M=M+1 // end push argument 0 // (L7:104)
+@SP // (L8:105)
+A=M-1 // (L8:106)
+D=M // (L8:107)
+@ARG // (L8:108)
+A=M // (L8:109)
+M=D // (L8:110)
+@ARG // (L8:111)
+D=M+1 // (L8:112)
+@SP // (L8:113)
+M=D // @SP = ARG+1 // (L8:114)
+@LCL // (L8:115)
+D=M // (L8:116)
+@R13 // (L8:117)
+M=D // Save LCL to R13 // (L8:118)
+A=D-1 // A=*LCL-1 // (L8:119)
+D=M // D=*(*LCL-1) // (L8:120)
+@THAT // A=THAT // (L8:121)
+M=D   // *that = *(*lcl-1) // (L8:122)
+@R13 // (L8:123)
+A=M-1 // (L8:124)
+A=A-1 // A=*LCL-2 // (L8:125)
+D=M // D=*(*LCL-2) // (L8:126)
+@THIS // A=THIS // (L8:127)
+M=D   // *THIS = *(*lcl-2) // (L8:128)
+@R13 // (L8:129)
+A=M-1 // (L8:130)
+A=A-1 // (L8:131)
+A=A-1 // A=*LCL-3 // (L8:132)
+D=M // D=*(*LCL-3) // (L8:133)
+@ARG // A=ARG // (L8:134)
+M=D   // *ARG = *(*lcl-3) // (L8:135)
+@R13 // (L8:136)
+A=M-1 // (L8:137)
+A=A-1 // (L8:138)
+A=A-1 // (L8:139)
+A=A-1 // A=*LCL-4 // (L8:140)
+D=M // D=*(*LCL-4) // (L8:141)
+@LCL // A=LCL // (L8:142)
+M=D   // *LCL = *(*lcl-4) // (L8:143)
+@R13 // (L8:144)
+A=M-1 // (L8:145)
+A=A-1 // (L8:146)
+A=A-1 // (L8:147)
+A=A-1 // (L8:148)
+A=A-1 // A=*LCL-5 // (L8:149)
+A=M  // A=*(*LCL-5) // (L8:150)
+0;JMP // Jump to *(LCL-5) // (L8:151)
+(Main.fibonacciIF_FALSE) // end label IF_FALSE // (L9:152)
+@ARG // (L10:152)
+A=M // (L10:153)
+D=M // (L10:154)
+@SP // (L10:155)
+A=M // (L10:156)
+M=D // (L10:157)
+@SP // (L10:158)
+M=M+1 // end push argument 0 // (L10:159)
+@2 // push constant 2 // (L11:160)
+D=A // (L11:161)
+@SP // (L11:162)
+A=M // (L11:163)
+M=D // (L11:164)
+@SP // (L11:165)
+M=M+1 // end push constant 2 // (L11:166)
+@SP // ==== sub ==== // (L12:167)
+A=M-1 // (L12:168)
+D=M // (L12:169)
+A=A-1 // (L12:170)
+M=M-D // (L12:171)
+@SP // (L12:172)
+M=M-1 // end sub // (L12:173)
+@a3b7fa05917ee725f45e2c66ce232f37 // call Main.fibonacci 1 start // (L13:174)
+D=A // (L13:175)
+@SP // (L13:176)
+A=M // (L13:177)
+M=D // (L13:178)
+@SP // (L13:179)
+M=M+1 // (L13:180)
+@LCL // Read @LCL to A // (L13:181)
+D=M // Put @LCL to D // (L13:182)
+@SP // (L13:183)
+A=M // (L13:184)
+M=D // Save @LCL to SP // (L13:185)
+@SP // (L13:186)
+M=M+1 // end @LCL pushed to SP // (L13:187)
+@ARG // Read @ARG to A // (L13:188)
+D=M // Put @ARG to D // (L13:189)
+@SP // (L13:190)
+A=M // (L13:191)
+M=D // Save @ARG to SP // (L13:192)
+@SP // (L13:193)
+M=M+1 // end @ARG pushed to SP // (L13:194)
+@THIS // Read @THIS to A // (L13:195)
+D=M // Put @THIS to D // (L13:196)
+@SP // (L13:197)
+A=M // (L13:198)
+M=D // Save @THIS to SP // (L13:199)
+@SP // (L13:200)
+M=M+1 // end @THIS pushed to SP // (L13:201)
+@THAT // Read @THAT to A // (L13:202)
+D=M // Put @THAT to D // (L13:203)
+@SP // (L13:204)
+A=M // (L13:205)
+M=D // Save @THAT to SP // (L13:206)
+@SP // (L13:207)
+M=M+1 // end @THAT pushed to SP // (L13:208)
+@SP // (L13:209)
+D=M // (L13:210)
+@LCL // (L13:211)
+M=D // Update LCL=SP // (L13:212)
+D=D-1 // should repeat 6 times // (L13:213)
+D=D-1 // should repeat 6 times // (L13:214)
+D=D-1 // should repeat 6 times // (L13:215)
+D=D-1 // should repeat 6 times // (L13:216)
+D=D-1 // should repeat 6 times // (L13:217)
+D=D-1 // should repeat 6 times // (L13:218)
+@ARG // write D to ARG // (L13:219)
+M=D // (L13:220)
+@Main.fibonacci // Jump to Main.fibonacci // (L13:221)
+0;JMP // (L13:222)
+(a3b7fa05917ee725f45e2c66ce232f37) // return back from function here (CALL ENDS) // (L13:223)
+@ARG // (L14:223)
+A=M // (L14:224)
+D=M // (L14:225)
+@SP // (L14:226)
+A=M // (L14:227)
+M=D // (L14:228)
+@SP // (L14:229)
+M=M+1 // end push argument 0 // (L14:230)
+@1 // push constant 1 // (L15:231)
+D=A // (L15:232)
+@SP // (L15:233)
+A=M // (L15:234)
+M=D // (L15:235)
+@SP // (L15:236)
+M=M+1 // end push constant 1 // (L15:237)
+@SP // ==== sub ==== // (L16:238)
+A=M-1 // (L16:239)
+D=M // (L16:240)
+A=A-1 // (L16:241)
+M=M-D // (L16:242)
+@SP // (L16:243)
+M=M-1 // end sub // (L16:244)
+@59c3e1ed914ff5e6e713615a6bb2a5e2 // call Main.fibonacci 1 start // (L17:245)
+D=A // (L17:246)
+@SP // (L17:247)
+A=M // (L17:248)
+M=D // (L17:249)
+@SP // (L17:250)
+M=M+1 // (L17:251)
+@LCL // Read @LCL to A // (L17:252)
+D=M // Put @LCL to D // (L17:253)
+@SP // (L17:254)
+A=M // (L17:255)
+M=D // Save @LCL to SP // (L17:256)
+@SP // (L17:257)
+M=M+1 // end @LCL pushed to SP // (L17:258)
+@ARG // Read @ARG to A // (L17:259)
+D=M // Put @ARG to D // (L17:260)
+@SP // (L17:261)
+A=M // (L17:262)
+M=D // Save @ARG to SP // (L17:263)
+@SP // (L17:264)
+M=M+1 // end @ARG pushed to SP // (L17:265)
+@THIS // Read @THIS to A // (L17:266)
+D=M // Put @THIS to D // (L17:267)
+@SP // (L17:268)
+A=M // (L17:269)
+M=D // Save @THIS to SP // (L17:270)
+@SP // (L17:271)
+M=M+1 // end @THIS pushed to SP // (L17:272)
+@THAT // Read @THAT to A // (L17:273)
+D=M // Put @THAT to D // (L17:274)
+@SP // (L17:275)
+A=M // (L17:276)
+M=D // Save @THAT to SP // (L17:277)
+@SP // (L17:278)
+M=M+1 // end @THAT pushed to SP // (L17:279)
+@SP // (L17:280)
+D=M // (L17:281)
+@LCL // (L17:282)
+M=D // Update LCL=SP // (L17:283)
+D=D-1 // should repeat 6 times // (L17:284)
+D=D-1 // should repeat 6 times // (L17:285)
+D=D-1 // should repeat 6 times // (L17:286)
+D=D-1 // should repeat 6 times // (L17:287)
+D=D-1 // should repeat 6 times // (L17:288)
+D=D-1 // should repeat 6 times // (L17:289)
+@ARG // write D to ARG // (L17:290)
+M=D // (L17:291)
+@Main.fibonacci // Jump to Main.fibonacci // (L17:292)
+0;JMP // (L17:293)
+(59c3e1ed914ff5e6e713615a6bb2a5e2) // return back from function here (CALL ENDS) // (L17:294)
+@SP // ==== add ==== // (L18:294)
+A=M-1 // (L18:295)
+D=M // (L18:296)
+A=A-1 // (L18:297)
+M=D+M // (L18:298)
+@SP // (L18:299)
+M=M-1 // end add // (L18:300)
+@SP // (L19:301)
+A=M-1 // (L19:302)
+D=M // (L19:303)
+@ARG // (L19:304)
+A=M // (L19:305)
+M=D // (L19:306)
+@ARG // (L19:307)
+D=M+1 // (L19:308)
+@SP // (L19:309)
+M=D // @SP = ARG+1 // (L19:310)
+@LCL // (L19:311)
+D=M // (L19:312)
+@R13 // (L19:313)
+M=D // Save LCL to R13 // (L19:314)
+A=D-1 // A=*LCL-1 // (L19:315)
+D=M // D=*(*LCL-1) // (L19:316)
+@THAT // A=THAT // (L19:317)
+M=D   // *that = *(*lcl-1) // (L19:318)
+@R13 // (L19:319)
+A=M-1 // (L19:320)
+A=A-1 // A=*LCL-2 // (L19:321)
+D=M // D=*(*LCL-2) // (L19:322)
+@THIS // A=THIS // (L19:323)
+M=D   // *THIS = *(*lcl-2) // (L19:324)
+@R13 // (L19:325)
+A=M-1 // (L19:326)
+A=A-1 // (L19:327)
+A=A-1 // A=*LCL-3 // (L19:328)
+D=M // D=*(*LCL-3) // (L19:329)
+@ARG // A=ARG // (L19:330)
+M=D   // *ARG = *(*lcl-3) // (L19:331)
+@R13 // (L19:332)
+A=M-1 // (L19:333)
+A=A-1 // (L19:334)
+A=A-1 // (L19:335)
+A=A-1 // A=*LCL-4 // (L19:336)
+D=M // D=*(*LCL-4) // (L19:337)
+@LCL // A=LCL // (L19:338)
+M=D   // *LCL = *(*lcl-4) // (L19:339)
+@R13 // (L19:340)
+A=M-1 // (L19:341)
+A=A-1 // (L19:342)
+A=A-1 // (L19:343)
+A=A-1 // (L19:344)
+A=A-1 // A=*LCL-5 // (L19:345)
+A=M  // A=*(*LCL-5) // (L19:346)
+0;JMP // Jump to *(LCL-5) // (L19:347)
+(Sys.init) // function Sys.init 0 // (L20:348)
+@4 // push constant 4 // (L21:348)
+D=A // (L21:349)
+@SP // (L21:350)
+A=M // (L21:351)
+M=D // (L21:352)
+@SP // (L21:353)
+M=M+1 // end push constant 4 // (L21:354)
+@c28123f096da12e9e9a4357d4823b8d2 // call Main.fibonacci 1 start // (L22:355)
+D=A // (L22:356)
+@SP // (L22:357)
+A=M // (L22:358)
+M=D // (L22:359)
+@SP // (L22:360)
+M=M+1 // (L22:361)
+@LCL // Read @LCL to A // (L22:362)
+D=M // Put @LCL to D // (L22:363)
+@SP // (L22:364)
+A=M // (L22:365)
+M=D // Save @LCL to SP // (L22:366)
+@SP // (L22:367)
+M=M+1 // end @LCL pushed to SP // (L22:368)
+@ARG // Read @ARG to A // (L22:369)
+D=M // Put @ARG to D // (L22:370)
+@SP // (L22:371)
+A=M // (L22:372)
+M=D // Save @ARG to SP // (L22:373)
+@SP // (L22:374)
+M=M+1 // end @ARG pushed to SP // (L22:375)
+@THIS // Read @THIS to A // (L22:376)
+D=M // Put @THIS to D // (L22:377)
+@SP // (L22:378)
+A=M // (L22:379)
+M=D // Save @THIS to SP // (L22:380)
+@SP // (L22:381)
+M=M+1 // end @THIS pushed to SP // (L22:382)
+@THAT // Read @THAT to A // (L22:383)
+D=M // Put @THAT to D // (L22:384)
+@SP // (L22:385)
+A=M // (L22:386)
+M=D // Save @THAT to SP // (L22:387)
+@SP // (L22:388)
+M=M+1 // end @THAT pushed to SP // (L22:389)
+@SP // (L22:390)
+D=M // (L22:391)
+@LCL // (L22:392)
+M=D // Update LCL=SP // (L22:393)
+D=D-1 // should repeat 6 times // (L22:394)
+D=D-1 // should repeat 6 times // (L22:395)
+D=D-1 // should repeat 6 times // (L22:396)
+D=D-1 // should repeat 6 times // (L22:397)
+D=D-1 // should repeat 6 times // (L22:398)
+D=D-1 // should repeat 6 times // (L22:399)
+@ARG // write D to ARG // (L22:400)
+M=D // (L22:401)
+@Main.fibonacci // Jump to Main.fibonacci // (L22:402)
+0;JMP // (L22:403)
+(c28123f096da12e9e9a4357d4823b8d2) // return back from function here (CALL ENDS) // (L22:404)
+(Sys.initWHILE) // end label WHILE // (L23:404)
+@Sys.initWHILE // (L24:404)
+0;JMP // end goto WHILE // (L24:405)
+@407 // (L25:406)
+0;JMP // (L25:407)

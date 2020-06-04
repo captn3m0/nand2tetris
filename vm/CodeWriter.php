@@ -17,65 +17,65 @@ class CodeWriter {
 
   public function writeReturn() {
     $this->write([
-      "@SP",
-      "A=M-1",
-      "D=M",// Popped value to D
+      '@SP',
+      'A=M-1',
+      'D=M',// Popped value to D
       // And then write it to *ARG = pop()
-      "@ARG",
-      "A=M",
-      "M=D",
+      '@ARG',
+      'A=M',
+      'M=D',
 
       // SP=ARG+1
-      "@ARG",
-      "D=M+1",
-      "@SP",
-      "M=D // @SP = ARG+1",
-      "@LCL",
-      "D=M",
-      "@R13",
-      "M=D // Save LCL to R13",
+      '@ARG',
+      'D=M+1',
+      '@SP',
+      'M=D // @SP = ARG+1',
+      '@LCL',
+      'D=M',
+      '@R13',
+      'M=D // Save LCL to R13',
 
       // now we go restoring THAT, THIS, ARG, LCL
-      "A=D-1 // A=*LCL-1",
-      "D=M // D=*(*LCL-1)",
-      "@THAT // A=THAT",
-      "M=D   // *that = *(*lcl-1)",
+      'A=D-1 // A=*LCL-1',
+      'D=M // D=*(*LCL-1)',
+      '@THAT // A=THAT',
+      'M=D   // *that = *(*lcl-1)',
       // now we restore THIS
-      "@R13",
-      "A=M-1",
-      "A=A-1 // A=*LCL-2",
-      "D=M // D=*(*LCL-2)",
-      "@THIS // A=THIS",
-      "M=D   // *THIS = *(*lcl-2)",
+      '@R13',
+      'A=M-1',
+      'A=A-1 // A=*LCL-2',
+      'D=M // D=*(*LCL-2)',
+      '@THIS // A=THIS',
+      'M=D   // *THIS = *(*lcl-2)',
 
       // now we restore ARG
-      "@R13",
-      "A=M-1",
-      "A=A-1",
-      "A=A-1 // A=*LCL-3",
-      "D=M // D=*(*LCL-3)",
-      "@ARG // A=ARG",
-      "M=D   // *ARG = *(*lcl-3)",
+      '@R13',
+      'A=M-1',
+      'A=A-1',
+      'A=A-1 // A=*LCL-3',
+      'D=M // D=*(*LCL-3)',
+      '@ARG // A=ARG',
+      'M=D   // *ARG = *(*lcl-3)',
 
       // now we restore LCL
-      "@R13",
-      "A=M-1",
-      "A=A-1",
-      "A=A-1",
-      "A=A-1 // A=*LCL-4",
-      "D=M // D=*(*LCL-4)",
-      "@LCL // A=LCL",
-      "M=D   // *LCL = *(*lcl-4)",
+      '@R13',
+      'A=M-1',
+      'A=A-1',
+      'A=A-1',
+      'A=A-1 // A=*LCL-4',
+      'D=M // D=*(*LCL-4)',
+      '@LCL // A=LCL',
+      'M=D   // *LCL = *(*lcl-4)',
 
       // Now we hyperjump
-      "@R13",
-      "A=M-1",
-      "A=A-1",
-      "A=A-1",
-      "A=A-1",
-      "A=A-1 // A=*LCL-5",
-      "A=M  // A=*(*LCL-5)",
-      "0;JMP // Jump to *(LCL-5)",
+      '@R13',
+      'A=M-1',
+      'A=A-1',
+      'A=A-1',
+      'A=A-1',
+      'A=A-1 // A=*LCL-5',
+      'A=M  // A=*(*LCL-5)',
+      '0;JMP // Jump to *(LCL-5)',
     ]);
   }
 
@@ -97,7 +97,8 @@ class CodeWriter {
     if ($numArgs > 0) {
       $this->write([
         // This is only required for the first argument
-        "@SP", "A=M"
+        '@SP',
+        'A=M',
       ]);
     }
 
@@ -105,9 +106,9 @@ class CodeWriter {
     // push a zero to the stack
     for($i=0;$i<$numArgs;$i++) {
       $this->write([
-        "M=0",
-        "@SP",
-        "AM=M+1",
+        'M=0',
+        '@SP',
+        'AM=M+1',
       ]);
     }
   }
@@ -121,20 +122,20 @@ class CodeWriter {
 
     // push the label to top of the stack
     $this->write([
-      "@$label",
-      "D=A",
-      "@SP",
-      "A=M",
-      "M=D",
-      "@SP",
-      "M=M+1"
+      "@$label // call $functionName $numArgs start",
+      'D=A',
+      '@SP',
+      'A=M',
+      'M=D',
+      '@SP',
+      'M=M+1',
     ]);
 
     $pushes = [
-      "@LCL",
-      "@ARG",
-      "@THIS",
-      "@THAT",
+      '@LCL',
+      '@ARG',
+      '@THIS',
+      '@THAT',
     ];
 
     // TODO: optimize this by saving LCL, ARG
@@ -144,42 +145,39 @@ class CodeWriter {
       $this->write([
         "$lookupRegister // Read $lookupRegister to A",
         "D=M // Put $lookupRegister to D",
-        "@SP",
-        "A=M",
+        '@SP',
+        'A=M',
         "M=D // Save $lookupRegister to SP",
-        "@SP",
-        "M=M+1",
+        '@SP',
+        "M=M+1 // end $lookupRegister pushed to SP",
       ]);
     }
 
     // Load current stackpointer to D
+    // and write it to LCL
     $this->write([
-      "@SP",
-      "D=M",
-    ]);
-
-    // Write current stackpointer to LCL
-    $this->write([
-      "@LCL",
-      "M=D",
+      '@SP',
+      'D=M',
+      '@LCL',
+      'M=D // Update LCL=SP',
     ]);
 
     // Reduce D height times = numArgs+5
     $height = $numArgs + 5;
     for ($i=0; $i < $height; $i++) {
       $this->write([
-        "D=D-1",
+        "D=D-1 // should repeat $height times",
       ]);
     }
 
     // now D = SP-n-5
     // now we need to write D to ARG
     $this->write([
-      "@ARG",
-      "M=D",
+      '@ARG // write D to ARG',
+      'M=D',
       "@$functionName // Jump to $functionName",
-      "0;JMP",
-      "($label) // return back from function here",
+      '0;JMP',
+      "($label) // return back from function here (CALL ENDS)",
     ]);
   }
 
@@ -188,22 +186,21 @@ class CodeWriter {
    */
   private function writeInit() {
     $this->write([
-      "@256 // init starts",
-      "D=A",
-      "@SP",
-      "M=D // initialized SP to 256",
-      "@300",
-      "D=A",
-      "@LCL",
-      "M=D // initialized @LCL to 300",
-      "@400",
-      "D=A",
-      "@ARG",
-      "M=D // initialized @ARG to 400, init ends",
-      // We jump to Sys.init
-      "@Sys.init",
-      "0;JMP"
+      '@256 // init starts',
+      'D=A',
+      '@SP',
+      'M=D // initialized SP to 256',
+      '@3000',
+      'D=A',
+      '@LCL',
+      'M=D // initialized @LCL to 3000',
+      '@4000',
+      'D=A',
+      '@ARG',
+      'M=D // initialized @ARG to 4000, init ends',
     ]);
+
+    $this->writeCall('Sys.init', 0);
   }
 
   function setInputFileName($inputFileName) {
@@ -226,7 +223,7 @@ class CodeWriter {
     $endJump = $this->ic+1;
     $this->write([
       "@$endJump",
-      "0;JMP"
+      '0;JMP',
     ]);
   }
 
@@ -236,7 +233,7 @@ class CodeWriter {
   function writeLabel(String $label) {
     $globalLabel = $this->resolveLabel($label);
     $this->write([
-      "($globalLabel) // end label $label (L{$this->sourceLine})",
+      "($globalLabel) // end label $label",
     ]);
   }
 
@@ -257,7 +254,7 @@ class CodeWriter {
     $globalLabel = $this->resolveLabel($label);
     $this->write([
       "@$globalLabel",
-      "0;JMP // end goto $label (L{$this->sourceLine})",
+      "0;JMP // end goto $label",
     ]);
   }
 
@@ -274,7 +271,7 @@ class CodeWriter {
       'AM=M-1',
       'D=M',
       "@$globalLabel",
-      "D;JNE // end if-goto $label (L{$this->sourceLine})",
+      "D;JNE // end if-goto $label",
     ]);
   }
 
@@ -283,8 +280,8 @@ class CodeWriter {
     // Read top of stack to D
     $this->write([
       "@SP // ==== $command ====",
-      "A=M-1",
-      "D=M"
+      'A=M-1',
+      'D=M'
     ]);
 
     switch ($command) {
@@ -293,7 +290,7 @@ class CodeWriter {
       case 'sub':
         $this->write([
           'A=A-1',
-          "M=M-D",
+          'M=M-D',
         ]);
         break;
 
@@ -307,7 +304,7 @@ class CodeWriter {
 
       case 'neg':
         $this->write([
-          "M=-M // end $command (L{$this->sourceLine})",
+          "M=-M // end $command",
         ]);
         $stackDecrease = false;
         break;
@@ -315,7 +312,7 @@ class CodeWriter {
 
       case 'not':
         $this->write([
-          "M=!M // end $command (L{$this->sourceLine})",
+          "M=!M // end $command",
         ]);
         $stackDecrease = false;
         break;
@@ -336,23 +333,23 @@ class CodeWriter {
 
       // TODO: Combine all the boolean commands
       case 'lt':
-        $jumpPointer = $this->ic+10;
+        $jumpPointer = $this->ic+11;
         $this->write([
           'A=A-1',
           'D=M-D',
           'M=0',
           'M=M-1',
           "@$jumpPointer",
-          "D;JLT",
-          "@SP",
-          "A=M-1",
-          "A=A-1",
-          "M=0",
+          'D;JLT',
+          '@SP',
+          'A=M-1',
+          'A=A-1',
+          'M=0',
         ]);
         break;
 
       case 'gt':
-        $jumpPointer = $this->ic+10;
+        $jumpPointer = $this->ic+11;
         $this->write([
           'A=A-1',
           'D=M-D',
@@ -360,15 +357,15 @@ class CodeWriter {
           'M=M-1',
           "@$jumpPointer",
           "D;JGT",
-          "@SP",
-          "A=M-1",
-          "A=A-1",
-          "M=0",
+          '@SP',
+          'A=M-1',
+          'A=A-1',
+          'M=0',
         ]);
         break;
 
       case 'eq':
-        $jumpPointer = $this->ic+10;
+        $jumpPointer = $this->ic+11;
         $this->write([
           'A=A-1',
           'D=M-D',
@@ -376,10 +373,10 @@ class CodeWriter {
           'M=M-1',
           "@{$jumpPointer}",
           'D;JEQ',
-          "@SP",
-          "A=M-1",
-          "A=A-1",
-          "M=0",
+          '@SP',
+          'A=M-1',
+          'A=A-1',
+          'M=0',
         ]);
         break;
 
@@ -391,17 +388,17 @@ class CodeWriter {
     if ($stackDecrease) {
       $this->write([
         '@SP',
-        "M=M-1 // end $command (L{$this->sourceLine})"
+        "M=M-1 // end $command"
       ]);
     }
   }
 
   private function write(Array $lines) {
     foreach ($lines as $line) {
-      if (substr($line, 0, 2) !== "//") {
+      fwrite($this->file, "$line // (L{$this->sourceLine}:{$this->ic})\n");
+      if (substr($line, 0, 2) !== "//" and substr($line, 0, 1) !== "(") {
         $this->ic += 1;
       }
-      fwrite($this->file, "$line\n");
     }
   }
 
@@ -419,7 +416,7 @@ class CodeWriter {
           // Take the constant
           "@$index // push $segment $index",
           // Write it to D
-          "D=A",
+          'D=A',
         ]);
         break;
       case 'argument':
@@ -433,8 +430,8 @@ class CodeWriter {
         }
         $this->write([
           $register,
-          "A=M",
-          "D=M",
+          'A=M',
+          'D=M',
         ]);
         break;
 
@@ -442,7 +439,7 @@ class CodeWriter {
         $symbol = $this->resolveStatic($index);
         $this->write([
           $symbol,
-          "D=M"
+          'D=M'
         ]);
         break;
 
@@ -450,7 +447,7 @@ class CodeWriter {
         $register = $this->resolvePointer($index);
         $this->write([
           "$register // pointer $index",
-          "D=M"
+          'D=M'
         ]);
         break;
 
@@ -458,7 +455,7 @@ class CodeWriter {
         $register = $this->resolveTemp($index);
         $this->write([
           "$register // temp $index",
-          "D=M"
+          'D=M'
         ]);
         break;
 
@@ -475,7 +472,7 @@ class CodeWriter {
       "M=D",
       // Bump Stack Pointer
       "@SP",
-      "M=M+1 // end push $segment $index (L{$this->sourceLine})",
+      "M=M+1 // end push $segment $index",
     ]);
   }
 
@@ -500,7 +497,7 @@ class CodeWriter {
     $register = $this->resolveSegmentToRegister($segment);
     $this->write([
         "$register // $segment $index" ,
-        "D=M",
+        'D=M',
         "@$index // write $index to A",
         "D=D+A // D = segment+index",
         "@R13 // save it to R13",
@@ -533,10 +530,10 @@ class CodeWriter {
         $this->write([
           "@SP // pop",
           "AM=M-1",
-          "D=M",
+          'D=M',
           $lookupRegister,
           "A=M // Read $lookupRegister to A (for $segment $index)",
-          "M=D // end pop $segment $index (L{$this->sourceLine})",
+          "M=D // end pop $segment $index",
         ]);
         break;
 
@@ -545,9 +542,9 @@ class CodeWriter {
         $this->write([
           "@SP //pop $segment $index",
           "AM=M-1",
-          "D=M",
+          'D=M',
           $symbol,
-          "M=D // end pop $segment $index (L{$this->sourceLine})"
+          "M=D // end pop $segment $index"
         ]);
         break;
 
@@ -557,9 +554,9 @@ class CodeWriter {
         $this->write([
           "@SP // pop",
           "AM=M-1",
-          "D=M",
+          'D=M',
           $register,
-          "M=D // (L{$this->sourceLine})"
+          "M=D //"
         ]);
         break;
 
@@ -568,9 +565,9 @@ class CodeWriter {
         $this->write([
           "@SP",
           "AM=M-1",
-          "D=M",
+          'D=M',
           "$tempRegister",
-          "M=D // end pop temp $index (L{$this->sourceLine})"
+          "M=D // end pop temp $index"
         ]);
         break;
 
