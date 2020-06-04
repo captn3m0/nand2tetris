@@ -90,7 +90,7 @@ Counting number of instructions by `wc -l $file.hack`
 - [x] `Rect.asm`
 - [x] `Pong.asm`
 
-## [Project 6: Virtual Machine I - Stack Arithmetic](https://www.nand2tetris.org/project07)
+## [Project 7: Virtual Machine I - Stack Arithmetic](https://www.nand2tetris.org/project07)
 
 Final hack instruction set count in brackets. Calculated by running:
 
@@ -111,7 +111,7 @@ wc -l file.hack
 - [x] `PointerTest.vm` (127)
 - [x] `StackTest.vm` (73)
 
-## [Project 7: Virtual Machine II - Program Control](https://www.nand2tetris.org/project07)
+## [Project 8: Virtual Machine II - Program Control](https://www.nand2tetris.org/project08)
 
 ### Program Flow Commands
 
