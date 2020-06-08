@@ -67,10 +67,17 @@ I think there are definitely some tricks with reducing lookup table sizes, but I
 
 # VM (1)
 
-See `vm/README.md` for more details. Observations go here, implementation notes are there.
+The implementation is written in Modern PHP with static typing. Uses the following 3 classes
+
+- `CommandType` as a Enum for using command types as constants
+- `Parser`, mostly as defined in the specification
+- `CodeWriter`, mostly as defined in the specification
+- `VMTranslator` which combines the above
 
 # VM (2)
 
 Learnt quite a lot. Interesting gotchas:
 
 1. Stack manipuation is hard. Keeping track of registers is hard. I was going by the diagrams which always have "arguments" going from 0..n, which screws up the one case where you don't have arguments for a function, and ARG points to the same location where the return address is stored. In case the VM writes the return value to ARG[0], and you have zero arguments - it will also overwrite the return address, and your whole stack will go haywire (I got cool designs on my screen because of this).
+
+2. I got into a weird state where FibonacciElement test was passing, but the SimpleFunction was failing for me. Ended up wasting a lot of time reverting back and forth to figure out the differences. If you're stuck here, check the [project page](https://www.nand2tetris.org/project08) for details on the intermediate `NestedCall.vm` testcase, which comes with a [detailed survival guide](https://www.nand2tetris.org/copy-of-hdl-survival-guide) and RAM states at various points in the call history: https://www.nand2tetris.org/copy-of-nestedcall.

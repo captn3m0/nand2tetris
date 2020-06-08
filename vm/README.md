@@ -27,11 +27,3 @@ Register  |  Name  | Usage
 `RAM[4]`  | `THAT` | `that`
 RAM[5-12] | `temp` Segment
 RAM[13-15]| General Purpose Registers
-
-
-The implementation is written in Modern PHP with static typing. Uses the following 3 classes
-
-- `CommandType` as a Enum for using command types as constants
-- `Parser`, mostly as defined in the specification
-- `CodeWriter`, mostly as defined in the specification
-- `VMTranslator` which combines the above
