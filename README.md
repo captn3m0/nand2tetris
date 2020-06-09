@@ -128,3 +128,19 @@ Final hack instruction set count in brackets as before.
 - [x] `StaticsTest.vm` (664)
 
 ## [Project 9: High-Level Programming](https://www.nand2tetris.org/project09)
+
+- [x] TicTacToe
+
+## [Project 10: Compiler I - Syntax Analysis](https://www.nand2tetris.org/project10)
+
+### Tokenizer
+
+- [ ] Square
+- [ ] ExpressionLessSquare
+- [ ] TestArray
+
+### Parser (Compilation Engine)
+
+- [ ] Square
+- [ ] ExpressionLessSquare
+- [ ] TestArray
