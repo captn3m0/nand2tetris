@@ -1,0 +1,126 @@
+class Board {
+  // Array of 0 by default
+  // X=1
+  // O=2
+  field Array gameState;
+  field int turn;
+
+  constructor Board new() {
+    var int i;
+    let i=0;
+    let turn = 0;
+    let gameState = Array.new(9);
+    while(i<9) {
+      let gameState[i] = 0;
+      let i=i+1;
+    }
+
+    return this;
+  }
+
+  method boolean isRowTaken(int row, int value) {
+    if (gameState[row*3] = value &
+      gameState[(row*3)+1] = value &
+      gameState[(row*3)+2] = value) {
+      return true;
+    }
+    return false;
+  }
+
+  method boolean isColumnTaken(int column, int value) {
+    if (gameState[column] = value &
+      gameState[column+3] = value &
+      gameState[column+6] = value) {
+      return true;
+    }
+
+    return false;
+  }
+
+  method boolean isWon(int value) {
+    if (isRowTaken(0,value) | isRowTaken(1, value) | isRowTaken(1, value)) {
+      return true;
+    }
+    if (isColumnTaken(0, value) | isColumnTaken(1, value) | isColumnTaken(2, value)) {
+      return true;
+    }
+
+    if (isDiagonalTaken(value)) {
+      return true;
+    }
+    return false;
+  }
+
+  method boolean isDiagonalTaken(int value) {
+    // ensure center is correct first
+    if (~(gameState[4] = value )) {
+      return false;
+    }
+    // NORTH WEST TO SOUTH EAST
+    if (gameState[0] = value & gameState[8] = value) {
+      return true;
+    }
+
+    if (gameState[2] = value & gameState[6] = value) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // returns 1 if player X won
+  // returns 2 if player O won
+  // 0 otherwise
+  method int winner() {
+
+    if(isWon(1)) {
+      return 1;
+    }
+
+    if(isWon(2)) {
+      return 2;
+    }
+
+    return 0;
+  }
+
+  method boolean play(int row, int column) {
+    var int move, remainder;
+    let move = 0;
+
+    if (~ (gameState[(row*3) + column] = 0)) {
+      return false;
+    }
+
+    let remainder = turn - (2 * (turn/2));
+    if (remainder = 0) {
+      let move = 1;
+    } else {
+      let move = 2;
+    }
+
+    let gameState[row*3 + column] = move;
+    if (move = 1) {
+      do Draw.DrawX(row, column);
+    } else {
+      if (move = 2) {
+        do Draw.DrawO(row, column);
+      }
+    }
+
+    if(isWon(1)) {
+      return true;
+    }
+
+    if(isWon(2)) {
+      return true;
+    }
+
+    if (turn = 8) {
+      return true;
+    }
+
+    let turn = turn + 1;
+    return false;
+  }
+}

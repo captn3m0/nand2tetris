@@ -1,0 +1,99 @@
+class Draw {
+  // Draws the grid
+  function void Grid() {
+    var int row;
+    var int startBlock;
+    let row = 0;
+    while(row<3) {
+      let startBlock = 32 * (row) * 16;
+      do Draw.Border(startBlock);
+      do Draw.Border(startBlock + 1);
+      do Draw.Border(startBlock + 2);
+      let row=row+1;
+    }
+    return;
+  }
+
+  function void Border(int location) {
+    var int memAddress;
+    let memAddress = 16384+location;
+    do Memory.poke(memAddress+0, -1);
+    do Memory.poke(memAddress+32, -32767);
+    do Memory.poke(memAddress+64, -32767);
+    do Memory.poke(memAddress+96, -32767);
+    do Memory.poke(memAddress+128, -32767);
+    do Memory.poke(memAddress+160, -32767);
+    do Memory.poke(memAddress+192, -32767);
+    do Memory.poke(memAddress+224, -32767);
+    do Memory.poke(memAddress+256, -32767);
+    do Memory.poke(memAddress+288, -32767);
+    do Memory.poke(memAddress+320, -32767);
+    do Memory.poke(memAddress+352, -32767);
+    do Memory.poke(memAddress+384, -32767);
+    do Memory.poke(memAddress+416, -32767);
+    do Memory.poke(memAddress+448, -32767);
+    do Memory.poke(memAddress+480, -1);
+    return;
+  }
+
+  function int Location(int row, int column) {
+    return (32 * row * 16) + column;
+  }
+
+  function void DrawX(int row, int column) {
+    var int l;
+    let l = Draw.Location(row, column);
+    do Draw.X(l);
+    return;
+  }
+  function void DrawO(int row, int column) {
+    var int l;
+    let l = Draw.Location(row, column);
+    do Draw.O(l);
+    return;
+  }
+
+  function void X(int location) {
+    var int memAddress;
+    let memAddress = 16384+location;
+    do Memory.poke(memAddress+0, -1);
+    do Memory.poke(memAddress+32, -32767);
+    do Memory.poke(memAddress+64, -20467);
+    do Memory.poke(memAddress+96, -18403);
+    do Memory.poke(memAddress+128, -25543);
+    do Memory.poke(memAddress+160, -29071);
+    do Memory.poke(memAddress+192, -31807);
+    do Memory.poke(memAddress+224, -31807);
+    do Memory.poke(memAddress+256, -31807);
+    do Memory.poke(memAddress+288, -31807);
+    do Memory.poke(memAddress+320, -29071);
+    do Memory.poke(memAddress+352, -25543);
+    do Memory.poke(memAddress+384, -18403);
+    do Memory.poke(memAddress+416, -20467);
+    do Memory.poke(memAddress+448, -32767);
+    do Memory.poke(memAddress+480, -1);
+    return;
+  }
+
+function void O(int location) {
+  var int memAddress;
+    let memAddress = 16384+location;
+    do Memory.poke(memAddress+0, -1);
+    do Memory.poke(memAddress+32, -32767);
+    do Memory.poke(memAddress+64, -28687);
+    do Memory.poke(memAddress+96, -24583);
+    do Memory.poke(memAddress+128, -20467);
+    do Memory.poke(memAddress+160, -20467);
+    do Memory.poke(memAddress+192, -20467);
+    do Memory.poke(memAddress+224, -20467);
+    do Memory.poke(memAddress+256, -20467);
+    do Memory.poke(memAddress+288, -20467);
+    do Memory.poke(memAddress+320, -20467);
+    do Memory.poke(memAddress+352, -20467);
+    do Memory.poke(memAddress+384, -24583);
+    do Memory.poke(memAddress+416, -28687);
+    do Memory.poke(memAddress+448, -32767);
+    do Memory.poke(memAddress+480, -1);
+    return;
+  }
+}

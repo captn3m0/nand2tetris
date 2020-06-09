@@ -1,0 +1,55 @@
+class Main {
+  function void main() {
+    var int c,position;
+    var Board b;
+    var char key;  // the key currently pressed by the user
+    var boolean exit;
+    var boolean gameend;
+
+    let exit = false;
+    let b = Board.new();
+
+    do Draw.Grid();
+
+    while(~exit) {
+      while (key = 0) {
+        let key = Keyboard.keyPressed();
+        do Sys.wait(5); // wait 5ms
+     }
+
+     let position = -1;
+
+     if (key = 81)  { let exit = true; }  // q
+     if (key = 49)  { let position = 0; } // 1
+     if (key = 50)  { let position = 1; }
+     if (key = 51)  { let position = 2; }
+     if (key = 52)  { let position = 3; }
+     if (key = 53)  { let position = 4; }
+     if (key = 54)  { let position = 5; }
+     if (key = 55)  { let position = 6; }
+     if (key = 56)  { let position = 7; }
+     if (key = 57)  { let position = 8; } // 9
+
+     if((key>48)&(key<58)) {
+        let c = position - (3 * (position/3));
+        let gameend = b.play(position/3, c);
+        if (gameend) {
+          do Screen.clearScreen();
+          let c = b.winner();
+          if(c = 1) {
+            do Output.printString("Congratulations Player 1");
+          }
+          if (c = 2) {
+            do Output.printString("Congratulations Player 2");
+          }
+          if (c = 0) {
+            do Output.printString("It was a draw!");
+          }
+          let exit = true;
+        }
+        let key = 0;
+     }
+    }
+    return;
+  }
+}
