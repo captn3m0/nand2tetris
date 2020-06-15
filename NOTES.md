@@ -81,3 +81,27 @@ Learnt quite a lot. Interesting gotchas:
 1. Stack manipuation is hard. Keeping track of registers is hard. I was going by the diagrams which always have "arguments" going from 0..n, which screws up the one case where you don't have arguments for a function, and ARG points to the same location where the return address is stored. In case the VM writes the return value to ARG[0], and you have zero arguments - it will also overwrite the return address, and your whole stack will go haywire (I got cool designs on my screen because of this).
 
 2. I got into a weird state where FibonacciElement test was passing, but the SimpleFunction was failing for me. Ended up wasting a lot of time reverting back and forth to figure out the differences. If you're stuck here, check the [project page](https://www.nand2tetris.org/project08) for details on the intermediate `NestedCall.vm` testcase, which comes with a [detailed survival guide](https://www.nand2tetris.org/copy-of-hdl-survival-guide) and RAM states at various points in the call history: https://www.nand2tetris.org/copy-of-nestedcall.
+
+# Writing Jack (Chapter 9)
+
+I thought of writing a Ultimate Tic Toe game in Jack, but decided against it in the interest of time. The book specifically asks you to treat the project as a learning exercise to get a feel for Jack, and not try to become an expert Jack programmer. Writing UTT would have resulted in a lot of Yak Shaving which I wanted to avoid. I instead spent the time working on [other projects](https://github.com/captn3m0/modernart).
+
+# Compiler - Tokenizer
+
+Writing the Tokenizer was fun. The hardest part was, surprisingly, comments. Since we're removing comments before we have a complete tokenization, parsing the following line becomes super-hard:
+
+```java
+/*Open a comment */ let s = "/** This is not a comment */"; /* But this is */ do a.b;
+```
+
+I decided to ignore such edge cases, and focus on getting the base ideas correct. I haven't corrected for either of the two issues:
+
+- multiple multi-line comments on the same line
+- multi-line comments inside of strings
+
+I can definitely solve it, but I want to do it properly. I've also realized why I love PHP, and not Python so much -
+
+1. The standard library is much _easier to use_. PHP is built for developer productivity first, and terseness doesn't matter. Examples: Creating a directory recursively in [PHP][https://www.php.net/manual/en/function.mkdir.php] vs [Python](https://stackoverflow.com/a/600612)
+2. PHP's language documentation is aimed at users, while Python throws so much useless stuff at you. I'm yet to find a language documentation that rivals PHP, to be fair - but Python gets so much wrong. Searching for "condition" on Python docs gets you: a page on something called Condition Objects, Conditional Expressions, and "More on conditions" - none of which actually detail what are the conditional statements and how they work. Look at the [control structures](https://www.php.net/manual/en/language.control-structures.php) page on PHP website instead. Python docs also like talking about language implementation details too much. For eg, BNF notation is peppered throughout the docs. PHP on the other hand uses only one language in its docs - PHP.
+3. Lack of examples in documentation. You're left to figure out so many things. PHP gets this correct, for every function in the standard library. If examples are missing, the comments will usually have them.
+4. Static Typing

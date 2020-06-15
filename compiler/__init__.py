@@ -83,16 +83,13 @@ class JackTokenizer:
     # If this line as a single line comment anywhere
     # strip the line to start of //
     if line.find("//") != -1:
-      # print("Starting single line comment on %s" % line)
       line = line[:line.find("//")].strip()
 
     if self.insideMultiLineComment:
       if line.find("*/") == -1:
-        # print("Still inside multi line comment, continuing %s" % line)
         # The comment doesn't end in this line
         return []
       else:
-        # print("Closing multi line comment, continuing %s" % line)
         self.insideMultiLineComment = False
         # comments ends here, huzzah!
         line = line[:line.find("*/")].strip()
@@ -102,13 +99,10 @@ class JackTokenizer:
     elif line.find("/*") != -1:
       # The comment ends on the same line
       if line.find("*/") != -1:
-        # TODO: This doesn't handle multiple multi-line comments on the same line
         # TODO: this also breaks on /* inside strings :(
+        # TODO: This also breaks on multiple multi-line comments on the same line
         line = line[:line.find("/*")] + line[line.find("*/") + 2:].strip()
-        # print("This line has a /* and */ %s" % line)
-        # print("This line has a /* and */ %s" % len(line))
       else:
-        # print("Starting multi line comment on %s" % line)
         line = line[:line.find("/*")].strip()
         self.insideMultiLineComment = True
 
@@ -120,6 +114,7 @@ class JackTokenizer:
       # 1. Keywords
       # 2. Symbols
       # 3. Identifiers
+      # 4. Strings
       regex = re.compile("(class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|this|let|do|if|else|while|return|\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\||\.|[a-zA-Z_]+\w*|\".*\")")
       return [e.strip() for e in regex.split(line) if e != None and e.strip()!='']
 

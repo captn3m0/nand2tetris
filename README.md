@@ -1,11 +1,19 @@
-# nand2tetris
+# nand2tetris ![Status Badge](https://img.shields.io/badge/status-in%20progress-red)
 
 Working my way through the [Nand to Tetris Course](https://www.nand2tetris.org/)
 
 - Download the latest `nand2tetris.zip` from the book website, and overwrite everything in the `projects` and `tools` directory.
 - Remember to run `chmod +X tools/*.sh` if you're on \*nix.
 
-My notes are in [NOTES.md](NOTES.md).
+## High level implementation notes
+
+1. Projects 1-5 as is
+2. Project 6 (Assembler) done in ruby with a port to Rust in progress
+3. Project 7-8 (VM) done in PHP
+4. Project 9 - Wrote a small 2 player Tic Tac Toe game. Plan to upgrade it to Ultimate Tic Tac Toe when I get time.
+5. Project 10-11 - Writing the compiler in Python
+
+Detailed notes documenting progress updates are in [NOTES.md](NOTES.md).
 
 ## [Project 1: Boolean Logic](https://www.nand2tetris.org/project01)
 
