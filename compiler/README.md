@@ -322,3 +322,50 @@ subRoutineName
 #### `className`, `subroutineName`, `varName`
 
 `identifier`
+
+### Statements
+
+#### `statements`
+
+`statement*`
+
+#### `statement`
+
+`letStatement | ifStatement | whileStatement | doStatement | returnStatement`
+
+#### `letStatement`
+
+`let varName ([ expression])? = expression ;`
+
+#### `ifStatement`
+
+```
+if (expression) { statements }
+(else {statements})?
+```
+
+#### `whileStatement`
+
+`while (expression) {statements}`
+
+#### `doStatement`
+
+`do subroutineCall;`
+
+#### `returnStatement`
+
+`return expression?`;
+
+### Expressions
+
+TODO
+
+### Terminal / Non-Terminal Keywords
+
+|Terminal|Non-Terminal|
+|--------|------------|
+|keyword,symbol,integerConstant,stringConstant,identifier|class,classVarDec,subroutineDec,parameterList,subroutineBody,varDec|
+||statements,whileStatement,ifStatement,returnStatement,letStatement,doStatement|
+||expression,term,expressionList|
+
+
