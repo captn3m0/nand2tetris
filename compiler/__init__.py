@@ -1,12 +1,15 @@
 from enum import Enum
 import re
+import sys
+from html import escape
 
 class Token(Enum):
   KEYWORD = 1
   SYMBOL = 2
   IDENTIFIER = 3
-  INT_CONST = 4
+  INTEGERCONSTANT = 4
   STRING_CONST = 5
+  UNKNOWN = 6
 
 class Keyword(Enum):
   CLASS = 1
@@ -37,15 +40,23 @@ class JackAnalyzer:
 
 class JackTokenizer:
 
-  # KEYWORD_REGEXES='(class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|this|let|do|if|else|while|return)'
-
-  # SYMBOL_REGEXES = [
-  #   "{","}","\(","\)","]","["
-  # ]
-
   """ Returns the type of the current token """
   def tokenType(self):
+    t = self.current_token()
+    if t in ['class','constructor','function','method','field','static','var','int','char','boolean','void','true','false','null','this','let','do','if','else','while','return']:
+      return Token.KEYWORD
+    elif re.compile("(\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\||\.)").match(t):
+      return Token.SYMBOL
+    elif re.compile("\d+").match(t):
+      return Token.INTEGERCONSTANT
+    elif re.compile("\".*\"").match(t):
+      return Token.STRING_CONST
+    else:
+      return Token.IDENTIFIER
     pass
+
+  def printable_token(self):
+    return escape(self.current_token(), True)
 
   """ Returns the character which is the current token """
   def symbol(self):
@@ -59,8 +70,8 @@ class JackTokenizer:
 
   """ Returns the integer value of the current token """
   def intVal(self):
-    if self.tokenType() != Token.INT_CONST:
-      raise RuntimeError("Should only be called when tokenType is INT_CONST")
+    if self.tokenType() != Token.INTEGERCONSTANT:
+      raise RuntimeError("Should only be called when tokenType is INTEGERCONSTANT")
     return int(self.token)
 
   """ Returns a list of tokens for that line """
@@ -102,25 +113,45 @@ class JackTokenizer:
     if len(line) == 0:
       return []
     else:
-      regex = re.compile("(class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|this|let|do|if|else|while|return)|(\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\|)")
+      regex = re.compile("(class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|this|let|do|if|else|while|return)|(\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\||\.)|\s+")
       tokens = regex.split(line)
       return [e.strip() for e in tokens if e != None and e.strip()!='']
 
+  def has_more_tokens(self):
+    return self.ptr < len(self.tokens)
+
+  def current_token(self):
+    return self.tokens[self.ptr]
+
   def advance(self):
+    self.ptr += 1
+
+  def __init__(self, filename, print_xml=False):
+    self.ptr = 0
+    self.insideMultiLineComment = False
+    self.file = open(filename, 'r')
     self.tokens = []
     for line in self.file:
       self.tokens += self.parse_line(line)
 
-    print(self.tokens)
+    if(print_xml):
+      self.print_xml(self.xml_file(filename))
 
-  def __init__(self, filename):
-    self.insideMultiLineComment = False
-    self.file = open(filename, 'r')
+  def xml_file(self, jack_file):
+    return jack_file + "T.xml"
+
+  def print_xml(self, xml_filename):
+    with open(xml_filename, 'w') as f:
+      f.write("<tokens>\n")
+      while self.has_more_tokens():
+        f.write("<{type}> {value} </{type}>\n".format(type=self.tokenType().name.lower(), value=self.printable_token()))
+        self.advance()
+      f.write("</tokens>\n")
 
 class CompilationEngine:
   def __init__(self):
     pass
 
 if __name__ == '__main__':
-  jt = JackTokenizer("../projects/10/Square/Square.jack")
-  jt.advance()
+  jt = JackTokenizer(sys.argv[1], True)
+
