@@ -1,6 +1,4 @@
-# compiler README
-
-## Specification
+# Jack Language Specification
 
 ## Class Structure
 
@@ -235,3 +233,92 @@ This class supports some execution-related services. Everything is a function.
 1. `String.eraseLastChar`: String is empty
 1. `String.setInt`: Insufficient string capacity
 1. `Output.moveCursor`: Illegal cursor location
+
+## Jack Grammar Specification
+
+This comes from Figure 10.5
+
+### Lexical Elements
+
+#### `keyword`
+
+```
+class constructor function method
+field static var int char boolean void
+true false null this
+let do if else while return
+```
+
+#### `symbol`
+
+`{}()[].m;+-*/&|<>=~`
+
+#### `integerConstant`
+
+A decimal number in the range 0..32767
+
+#### `stringConstant`
+
+A sequence of unicode characters not including double quote or newline
+
+#### `identifier`
+
+A sequence of letters, digits, and underscore, not starting with a digit
+
+### Program Structure
+
+- A Jack program is a collection of classes
+- Each class appears in a separate file
+- The compilation unit is a class
+- A class is a sequence of tokens as per follow context-free syntax:
+
+#### `class`
+
+```
+class className {
+  classVarDec*
+  subRoutineDec*
+}
+```
+
+#### `classVarDec`
+
+(static|field) type varName (, varName)* ;
+
+#### `type`
+
+int | char | boolean | className
+
+#### `subRoutineDec`
+
+```
+(constructor | function | method)
+(void | type)
+subRoutineName
+( parameterList )
+```
+
+#### `parameterList`
+
+```
+(
+  (type varName) (, type varName)*
+)?
+```
+
+#### `subroutineBody`
+
+```
+{
+  varDec*
+  statements
+}
+```
+
+#### `varDec`
+
+`var type varName (, varName)* ;`
+
+#### `className`, `subroutineName`, `varName`
+
+`identifier`
