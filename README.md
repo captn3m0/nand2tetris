@@ -135,9 +135,8 @@ Final hack instruction set count in brackets as before.
 
 ### Tokenizer
 
-- [ ] Square
-- [ ] ExpressionLessSquare
-- [ ] TestArray
+- [x] Square
+- [x] TestArray
 
 ### Parser (Compilation Engine)
 

@@ -8,7 +8,7 @@ class Token(Enum):
   SYMBOL = 2
   IDENTIFIER = 3
   INTEGERCONSTANT = 4
-  STRING_CONST = 5
+  STRINGCONSTANT = 5
   UNKNOWN = 6
 
 class Keyword(Enum):
@@ -50,13 +50,16 @@ class JackTokenizer:
     elif re.compile("\d+").match(t):
       return Token.INTEGERCONSTANT
     elif re.compile("\".*\"").match(t):
-      return Token.STRING_CONST
+      return Token.STRINGCONSTANT
     else:
       return Token.IDENTIFIER
     pass
 
   def printable_token(self):
-    return escape(self.current_token(), True)
+    if self.tokenType() == Token.STRINGCONSTANT:
+      return self.current_token()[1:-1]
+    else:
+      return escape(self.current_token(), True)
 
   """ Returns the character which is the current token """
   def symbol(self):
@@ -113,9 +116,12 @@ class JackTokenizer:
     if len(line) == 0:
       return []
     else:
-      regex = re.compile("(class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|this|let|do|if|else|while|return)|(\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\||\.)|\s+")
-      tokens = regex.split(line)
-      return [e.strip() for e in tokens if e != None and e.strip()!='']
+      # Regex contains 3 parts:
+      # 1. Keywords
+      # 2. Symbols
+      # 3. Identifiers
+      regex = re.compile("(class|constructor|function|method|field|static|var|int|char|boolean|void|true|false|null|this|let|do|if|else|while|return|\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\||\.|[a-zA-Z_]+\w*|\".*\")")
+      return [e.strip() for e in regex.split(line) if e != None and e.strip()!='']
 
   def has_more_tokens(self):
     return self.ptr < len(self.tokens)
