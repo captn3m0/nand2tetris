@@ -251,7 +251,7 @@ let do if else while return
 
 #### `symbol`
 
-`{}()[].m;+-*/&|<>=~`
+`{}()[].;+-*/&|<>=~`
 
 #### `integerConstant`
 
@@ -296,6 +296,7 @@ int | char | boolean | className
 (void | type)
 subRoutineName
 ( parameterList )
+subroutineBody
 ```
 
 #### `parameterList`
@@ -367,5 +368,3 @@ TODO
 |keyword,symbol,integerConstant,stringConstant,identifier|class,classVarDec,subroutineDec,parameterList,subroutineBody,varDec|
 ||statements,whileStatement,ifStatement,returnStatement,letStatement,doStatement|
 ||expression,term,expressionList|
-
-

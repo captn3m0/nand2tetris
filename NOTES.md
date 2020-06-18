@@ -105,3 +105,9 @@ I can definitely solve it, but I want to do it properly. I've also realized why 
 2. PHP's language documentation is aimed at users, while Python throws so much useless stuff at you. I'm yet to find a language documentation that rivals PHP, to be fair - but Python gets so much wrong. Searching for "condition" on Python docs gets you: a page on something called Condition Objects, Conditional Expressions, and "More on conditions" - none of which actually detail what are the conditional statements and how they work. Look at the [control structures](https://www.php.net/manual/en/language.control-structures.php) page on PHP website instead. Python docs also like talking about language implementation details too much. For eg, BNF notation is peppered throughout the docs. PHP on the other hand uses only one language in its docs - PHP.
 3. Lack of examples in documentation. You're left to figure out so many things. PHP gets this correct, for every function in the standard library. If examples are missing, the comments will usually have them.
 4. Static Typing
+
+
+## Compilation Engine
+
+I'm hard-coding stuff a lot, with a lot of asserts
+would be nice once I have structure to actually generate the rules from the GRAMMAR
