@@ -1,0 +1,50 @@
+keyword:
+  - 'class'
+  - 'method'
+  - 'function'
+  - 'constructor'
+  - 'int'
+  - 'boolean'
+  - 'char'
+  - 'void'
+  - 'var'
+  - 'static'
+  - 'field'
+  - 'let'
+  - 'do'
+  - 'if'
+  - 'else'
+  - 'while'
+  - 'return'
+  - 'true'
+  - 'false'
+  - 'null'
+  - 'this'
+symbol:
+  - '{'
+  - '}'
+  - '('
+  - ')'
+  - '['
+  - ']'
+  - '.'
+  - ';'
+  - '+'
+  - '-'
+  - '*'
+  - '/'
+  - '&'
+  - '|'
+  - '<'
+  - '>'
+  - '='
+  - '~'
+  - ','
+# Predefined
+integerConstant: null
+StringConstant: null
+identifier: null
+className:
+class:
+  - class
+  - *className
