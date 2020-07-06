@@ -3,7 +3,10 @@ from keywords import Atom
 """
 The grammar is defined by the following constructs:
 
-The top level object is called GRAMMAR, which is the grammar for a class. It is a list object.
+The top level object is called GRAMMAR, which is the grammar for a class.
+It is a instance of the Element class
+The element class contains a grammar element, which is always defined as a list
+for an element class.
 
 Inside this list, each element can be any of the following:
 
@@ -18,37 +21,41 @@ a Python structure.
 
 """
 class Element:
+  # Usually I avoid inverted boolean variable names, but this is much cleaner
   def __init__(self, name, grammar):
+    assert(type(grammar)==list)
     self.name = name
     self.grammar = grammar
-
-TYPES = Element('type', Atom.INT | Atom.CHAR | Atom.BOOLEAN | Atom.IDENTIFIER)
 
 CLASSVARDEC = Element('classVarDec', [
   # static|field type (, name)* ;
   Atom.STATIC | Atom.FIELD,
-  TYPES,
+  Atom.INT | Atom.CHAR | Atom.BOOLEAN | Atom.IDENTIFIER,
+  Atom.IDENTIFIER,
   [Atom.COMMA, Atom.IDENTIFIER],
   Atom.SEMICOLON
 ])
 
-VARDEC = Element('varDec', [Atom.VAR, TYPES, Atom.IDENTIFIER,
+VARDEC = Element('varDec', [Atom.VAR, Atom.INT | Atom.CHAR | Atom.BOOLEAN | Atom.IDENTIFIER, Atom.IDENTIFIER,
   [Atom.COMMA, Atom.IDENTIFIER],
   Atom.SEMICOLON
 ])
-UNARY_OP = Element('unaryOp', Atom.NOT | Atom.MINUS)
 
-CONSTANT = Element('KeywordConstant', Atom.TRUE | Atom.FALSE|Atom.NULL|Atom.THIS)
+# Since this is not a non-terminal, we can just write it as a constant
+OP = Atom.PLUS | Atom.MINUS | Atom.MUL | Atom.DIV | Atom.AND | Atom.OR | Atom.GT | Atom.LT | Atom.EQ
+UNARY_OP = Atom.NOT | Atom.MINUS
+CONSTANT = Atom.TRUE | Atom.FALSE|Atom.NULL|Atom.THIS
+""" Pseudo-element to help define subroutine declarations """
+RETURN_TYPES= Atom.INT | Atom.CHAR|Atom.BOOLEAN|Atom.IDENTIFIER|Atom.VOID
 
-TERM = Element('term', Atom.INTEGERCONSTANT | Atom.STRINGCONSTANT | Atom.TRUE | Atom.FALSE | Atom.IDENTIFIER)
-
-OP = Element('op', Atom.PLUS | Atom.MINUS | Atom.MUL | Atom.DIV | Atom.AND | Atom.OR | Atom.GT | Atom.LT | Atom.EQ)
+# TODO: This is missing a lot of stuff
+TERM = Element('term', [Atom.INTEGERCONSTANT | Atom.STRINGCONSTANT | Atom.TRUE | Atom.FALSE | Atom.IDENTIFIER])
 
 EXPRESSION = Element('expression', [TERM, [OP, TERM]])
 
-EXPRESSIONLIST = Element('expressionList', (EXPRESSION, [Atom.COMMA, EXPRESSION]))
+EXPRESSIONLIST = Element('expressionList', [(EXPRESSION, [Atom.COMMA, EXPRESSION])])
 
-SUBROUTINE_CALL = Element('subroutineCall', {
+DO_STATEMENT = Element('doStatement', [{
   (Atom.IDENTIFIER, Atom.PARAN_OPEN): [
     EXPRESSIONLIST,
     Atom.PARAN_CLOSE,
@@ -59,54 +66,63 @@ SUBROUTINE_CALL = Element('subroutineCall', {
     EXPRESSIONLIST,
     Atom.PARAN_CLOSE
   ]
-})
+}])
 
-STATEMENT = Element('statement', {
-  (Atom.LET): [Atom.IDENTIFIER, (Atom.SQUARE_OPEN, EXPRESSION, Atom.SQUARE_CLOSE)],
-  (Atom.IF): [
-    Atom.PARAN_OPEN,
-    EXPRESSION,
-    Atom.PARAN_CLOSE,
-    Atom.BRACE_OPEN,
-    lambda: STATEMENTS,
-    Atom.BRACE_CLOSE,
-    # This is the tricky one
-    ( Atom.ELSE, Atom.BRACE_OPEN, lambda:STATEMENT, Atom.BRACE_CLOSE)
-  ],
-  (Atom.WHILE): [
-    Atom.PARAN_OPEN,
-    EXPRESSION,
-    Atom.PARAN_CLOSE,
-    Atom.BRACE_OPEN,
-    lambda: STATEMENTS,
-    Atom.BRACE_CLOSE,
-  ],
-  (Atom.DO): SUBROUTINE_CALL,
-  (Atom.RETURN): [(EXPRESSION), Atom.SEMICOLON]
-})
+LET_STATEMENT = Element('whileStatement', [
+  Atom.IDENTIFIER, (Atom.SQUARE_OPEN, EXPRESSION, Atom.SQUARE_CLOSE)])
 
-STATEMENTS = Element('statements', [STATEMENT])
+IF_STATEMENT = Element('ifStatement', [
+  Atom.PARAN_OPEN,
+  EXPRESSION,
+  Atom.PARAN_CLOSE,
+  Atom.BRACE_OPEN,
+  lambda: STATEMENTS,
+  Atom.BRACE_CLOSE,
+  # This is the tricky one
+  ( Atom.ELSE, Atom.BRACE_OPEN, lambda:STATEMENT, Atom.BRACE_CLOSE)
+])
+
+WHILE_STATEMENT = Element('whileStatement', [
+  Atom.PARAN_OPEN,
+  EXPRESSION,
+  Atom.PARAN_CLOSE,
+  Atom.BRACE_OPEN,
+  lambda: STATEMENTS,
+  Atom.BRACE_CLOSE,
+])
+
+RETURN_STATEMENT = Element('returnStatement', [(EXPRESSION), Atom.SEMICOLON])
+
+# Just a constant, since this isn't a non-terminal
+STATEMENT = {
+  (Atom.LET): LET_STATEMENT,
+  (Atom.IF): IF_STATEMENT,
+  (Atom.WHILE): WHILE_STATEMENT,
+  (Atom.DO): DO_STATEMENT,
+  (Atom.RETURN): RETURN_STATEMENT
+}
+
+STATEMENTS = Element('statements', [[STATEMENT]])
 
 SUBROUTINE_BODY = Element('subroutineBody', [
   # One or more variable declarations
   # `var type varName (, varName)* ;`
-    [VARDEC],
-    STATEMENTS
+  Atom.BRACE_OPEN,
+  [VARDEC],
+  STATEMENTS,
+  Atom.BRACE_CLOSE
 ])
-
-""" Pseudo-element to help define subroutine declarations """
-RETURN_TYPES= Atom.INT | Atom.CHAR|Atom.BOOLEAN|Atom.IDENTIFIER|Atom.VOID
 
 # Parameter List =
 #  (
 #    (type varName) (, type varName)*
 #  )?
 # we use tuples for zero OR one of a sequence
-PARAMETER_LIST = Element('parameterList', (
-  TYPES,
+PARAMETER_LIST = Element('parameterList', [(
+  Atom.INT | Atom.CHAR | Atom.BOOLEAN | Atom.IDENTIFIER,
   Atom.IDENTIFIER,
-  [Atom.COMMA, TYPES, Atom.IDENTIFIER]
-))
+  [Atom.COMMA, Atom.INT | Atom.CHAR|Atom.BOOLEAN|Atom.IDENTIFIER, Atom.IDENTIFIER]
+)])
 
 SUBROUTINEDEC = Element('subroutineDec', [
   # (constructor | function | method) (void | type) subRoutineName '(' parameterList ')'
@@ -117,10 +133,7 @@ SUBROUTINEDEC = Element('subroutineDec', [
   Atom.PARAN_OPEN,
   PARAMETER_LIST,
   Atom.PARAN_CLOSE,
-  # Subroutine Body
-  Atom.BRACE_OPEN,
   SUBROUTINE_BODY,
-  Atom.BRACE_CLOSE,
 ])
 
 CLASS = Element('class', [

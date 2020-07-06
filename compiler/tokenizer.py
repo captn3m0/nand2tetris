@@ -1,33 +1,29 @@
 import re
-from keywords import Keyword
+from keywords import *
 from html import escape
 from enum import Enum
 # Superclass in some sense
-class Token(Enum):
-  KEYWORD = 1
-  SYMBOL = 2
-
 class JackTokenizer:
   SYMBOL_MAP = {
-    '{': Keyword.BRACE_OPEN ,
-    '}': Keyword.BRACE_CLOSE ,
-    '(': Keyword.PARAN_OPEN ,
-    ')': Keyword.PARAN_CLOSE ,
-    '[': Keyword.SQUARE_OPEN ,
-    ']': Keyword.SQUARE_CLOSE ,
-    '.': Keyword.DOT ,
-    ';': Keyword.SEMICOLON ,
-    '+': Keyword.PLUS ,
-    '-': Keyword.MINUS ,
-    '*': Keyword.MUL ,
-    '/': Keyword.DIV ,
-    '&': Keyword.AND ,
-    '|': Keyword.OR ,
-    '<': Keyword.LT ,
-    '>': Keyword.GT ,
-    '=': Keyword.EQ ,
-    '~': Keyword.NOT ,
-    ',': Keyword.COMMA,
+    '{': Symbol.BRACE_OPEN ,
+    '}': Symbol.BRACE_CLOSE ,
+    '(': Symbol.PARAN_OPEN ,
+    ')': Symbol.PARAN_CLOSE ,
+    '[': Symbol.SQUARE_OPEN ,
+    ']': Symbol.SQUARE_CLOSE ,
+    '.': Symbol.DOT ,
+    ';': Symbol.SEMICOLON ,
+    '+': Symbol.PLUS ,
+    '-': Symbol.MINUS ,
+    '*': Symbol.MUL ,
+    '/': Symbol.DIV ,
+    '&': Symbol.AND ,
+    '|': Symbol.OR ,
+    '<': Symbol.LT ,
+    '>': Symbol.GT ,
+    '=': Symbol.EQ ,
+    '~': Symbol.NOT ,
+    ',': Symbol.COMMA,
   }
 
   KEYWORD_MAP = {
@@ -61,16 +57,16 @@ class JackTokenizer:
     elif re.compile("(\(|\)|\[|\]|,|\+|-|;|<|>|=|~|&|{|}|\*|\/|\||\.)").match(t):
       return JackTokenizer.SYMBOL_MAP[t]
     elif re.compile("\d+").match(t):
-      return Keyword.INTEGERCONSTANT
+      return Token.INTEGERCONSTANT
     elif re.compile("\".*\"").match(t):
-      return Keyword.STRINGCONSTANT
+      return Token.STRINGCONSTANT
     else:
       # TODO: Put an assert to ensure valid identifier
-      return Keyword.IDENTIFIER
+      return Token.IDENTIFIER
     pass
 
   def printable_token(self):
-    if self.tokenType() == Keyword.STRINGCONSTANT:
+    if self.tokenType() == Token.STRINGCONSTANT:
       return self.current_token()[1:-1]
     else:
       return escape(self.current_token(), True)
@@ -95,7 +91,7 @@ class JackTokenizer:
 
   """ Returns the integer value of the current token """
   def intVal(self):
-    self.assert_type(Keyword.INTEGERCONSTANT)
+    self.assert_type(Token.INTEGERCONSTANT)
     return int(self.token)
 
   """ Returns a list of tokens for that line """
