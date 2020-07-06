@@ -27,7 +27,6 @@ class Engine:
     self.jt.advance()
 
   def ZeroOrMany(self, grammarList, matchOnly):
-    # print("ZOM called")
     ret = self.compile(grammarList[0], matchOnly)
     if matchOnly:
       return ret
@@ -78,10 +77,6 @@ class Engine:
 
     self.advance()
 
-    print(lookup_keys)
-    print("grammar inside matchDict ")
-    print(grammar)
-
     # Grammar can be none
     if grammar:
       self.compile(grammar)
@@ -116,7 +111,6 @@ class Engine:
       self.advance()
       return True
     else:
-      print("%s != %s" % (current, expected))
       return False
 
   def open(self, el):
@@ -136,10 +130,6 @@ class Engine:
       ret = self.compile(grammar(), matchOnly)
     elif isinstance(grammar, Element):
       ret = self.compile(grammar.grammar, True)
-
-      if grammar.name == 'term':
-        print(ret)
-        print(self.atom())
 
       if (matchOnly == False and ret) or grammar.empty:
         self.open(grammar)

@@ -107,7 +107,64 @@ I can definitely solve it, but I want to do it properly. I've also realized why 
 4. Static Typing
 
 
+Update: A draft for this is at https://github.com/captn3m0/captn3m0.github.com/blob/master/_drafts/what-php-gets-right.md
+
+
 ## Compilation Engine
 
-I'm hard-coding stuff a lot, with a lot of asserts
-would be nice once I have structure to actually generate the rules from the GRAMMAR
+This took a long time. I attempted to write something that worked on pure python builtins for grammar declaration, and that stumped me for a while. Important insights:
+
+1. Extending native classes (Enum, list, dict) is very easy in Python
+2. Defining the right data structures for a parser is very important (things like Any/Many/OneOrMore)
+
+I'm using dictionaries for lookahead, which looks perfect for LL0 grammar, but when it gets to recursive terms, it gets much more trickier. The entire parser uses a `matchOnly` mode for various calls, which lets me ensure that only matches happens without any cursor being advanced.
+
+How do you handle recursive declarations in Pythonic grammar? I cheat by using lambdas:
+
+```python
+IF_STATEMENT = Element('ifStatement', Sequence([
+  Atom.PAREN_OPEN,
+  EXPRESSION,
+  Atom.PAREN_CLOSE,
+  Atom.BRACE_OPEN,
+  lambda: STATEMENTS,
+  Atom.BRACE_CLOSE,
+  # This is the tricky one
+  ( Atom.ELSE, Atom.BRACE_OPEN, lambda:STATEMENTS, Atom.BRACE_CLOSE)
+]))
+```
+
+I use various things for various usecases:
+
+- a token (denoted by a Atom enum)
+- a bitwise mask of the Atom enum to denote multiple possibilities
+- Another list, to denote zero-or-more of a inner-sequence
+- A tuple, to denote zero-or-one of a inner-sequence
+- A lambda denotes a recursive call, so we follow that accordingly
+- An instance of the Element class that is handled recursively
+- An instance of the Sequence class that is exactly the grammar sequence as in the list (Sequence extends from list)
+- A dictionary, which must have a tuple as its keys, which are used for the lookup. The follow-up sequence is then given by the dictionary values.
+
+As another example, this is how I define statement:
+
+```python
+STATEMENT = {
+  (Atom.LET,): LET_STATEMENT,
+  (Atom.IF,): IF_STATEMENT,
+  (Atom.WHILE,): WHILE_STATEMENT,
+  (Atom.DO,): DO_STATEMENT,
+  (Atom.RETURN,): RETURN_STATEMENT
+}
+```
+
+I'm not very happy with this, since this results in a stupid edge case where the let keyword is parsed before the let statement is opened, and I have to deal with it.
+
+If I get time, I'd like to improve on the following:
+
+- [ ] Create a proper `Any` class, and use that. I attempted this a bit, but didn't get too far
+- [ ] Remove the MatchDict implementation, it isn't nice, replace it with Any
+- [ ] Implement ZeroOrMany and ZeroOrOne as classes, and define their behaviour within the Compile method
+- [ ] Write a BNF to the pythonic-flavored-grammar (what I've described above) convertor.
+- [ ] Better exceptions and forceful errors, instead of failing quietely. If the parser expects an atom, and doesn't find it - it should error out
+
+I could have made this a lot easier by allowing "rewind" and dealing with the entire list of tokens as a list (so I could do tokens[current-1] for eg), but I was trying to avoid that.

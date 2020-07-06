@@ -148,6 +148,6 @@ Final hack instruction set count in brackets as before.
 
 ### Parser (Compilation Engine)
 
-- [ ] Square
-- [ ] ExpressionLessSquare
-- [ ] TestArray
+- [x] Square
+- [x] ExpressionLessSquare
+- [x] TestArray
