@@ -1,4 +1,4 @@
-# nand2tetris ![Status Badge](https://img.shields.io/badge/status-in%20progress-red)
+# nand2tetris ![Status Badge](https://img.shields.io/badge/status-in%20progress-red) ![](https://img.shields.io/badge/Progress-10%2F12-blue)
 
 Working my way through the [Nand to Tetris Course](https://www.nand2tetris.org/)
 
