@@ -26,6 +26,7 @@ class Element:
     assert(type(grammar)==list)
     self.name = name
     self.grammar = grammar
+    self.empty = False
 
   def __repr__(self):
     return self.name
@@ -51,8 +52,14 @@ CONSTANT = Atom.TRUE | Atom.FALSE|Atom.NULL|Atom.THIS
 """ Pseudo-element to help define subroutine declarations """
 RETURN_TYPES= Atom.INT | Atom.CHAR|Atom.BOOLEAN|Atom.IDENTIFIER|Atom.VOID
 
-# TODO: This is missing a lot of stuff
-TERM = Element('term', [Atom.INTEGERCONSTANT | Atom.STRINGCONSTANT | Atom.TRUE | Atom.FALSE | Atom.IDENTIFIER])
+# TODO: This is missing the following:
+# var [expression]
+# subRoutineCall
+# (expressions in parenthes)
+# unaryOP TERM
+TERM = Element('term', [
+  Atom.INTEGERCONSTANT | Atom.STRINGCONSTANT | Atom.TRUE | Atom.FALSE | Atom.NULL| Atom.THIS | Atom.IDENTIFIER
+])
 
 EXPRESSION = Element('expression', [TERM, [OP, TERM]])
 
@@ -131,6 +138,8 @@ PARAMETER_LIST = Element('parameterList', [(
   Atom.IDENTIFIER,
   [Atom.COMMA, Atom.INT | Atom.CHAR|Atom.BOOLEAN|Atom.IDENTIFIER, Atom.IDENTIFIER]
 )])
+
+EXPRESSIONLIST.empty = PARAMETER_LIST.empty = True
 
 SUBROUTINEDEC = Element('subroutineDec', [
   # (constructor | function | method) (void | type) subRoutineName '(' parameterList ')'

@@ -29,8 +29,8 @@ class Engine:
   def ZeroOrMany(self, grammarList, matchOnly):
     # print("ZOM called")
     ret = self.compile(grammarList[0], matchOnly)
-    if ret and matchOnly:
-      return True
+    if matchOnly:
+      return ret
     elif ret:
       # We now expect the whole of it
       for e in grammarList:
@@ -39,7 +39,7 @@ class Engine:
       self.ZeroOrMany(grammarList, False)
       return True
     else:
-      return None
+      return False
 
   def write(self, line, end = "\n"):
     self.file.write(self.i*" " +  line + end)
@@ -54,6 +54,7 @@ class Engine:
 
     # We don't have to move the cursor for LL0 grammar
     if matchOnly:
+      assert(lookahead == 1)
       return lookup_keys in dictionary
 
     for _ in range(lookahead-1):
@@ -85,7 +86,10 @@ class Engine:
     return True
 
   def ZeroOrOne(self, grammarTuple, matchOnly):
-    if self.compile(grammarTuple[0], True):
+    ret = self.compile(grammarTuple[0], True)
+    if matchOnly:
+      return ret
+    elif ret:
       for e in grammarTuple:
         self.compile(e)
       return True
@@ -98,8 +102,8 @@ class Engine:
     current = self.atom()
     # We use in here to accomodate for bitmasks
     match = current in expected
-    if match and matchOnly:
-      return True
+    if matchOnly:
+      return match
     elif match:
       self.write(self.jt.xml_row(), end="")
       self.advance()
@@ -118,20 +122,17 @@ class Engine:
 
   """
   If you set matchOnly = true, the cursor will not move forward
-  if it is forced to move forward, it will instead RAISE AN ERROR
+  If it is forced to move forward (LL1 grammar for eg,) it will raise an error instead
   """
   def compile(self, thing, matchOnly = False):
-    # TODO: OPEN TAGS
     if isinstance(thing, Element):
-      ret = False
-      if self.compile(thing.grammar[0], True):
+      ret = self.compile(thing.grammar[0], True)
+      if (matchOnly == False and ret) or thing.empty:
         self.open(thing)
         for e in thing.grammar:
           ret = self.compile(e)
         self.close(thing)
-        return ret
-      else:
-        return ret
+      return ret
     elif callable(thing):
       grammar = thing()
       return self.compile(grammar, matchOnly)
