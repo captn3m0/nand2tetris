@@ -13,3 +13,9 @@ class Engine:
 
   def xml_file(self, input_file):
     return input_file + ".xml"
+
+  """ Throughout the compilation engine, we work using atoms"""
+  def atom(self):
+    token = self.jt.tokenType()
+    return Atom(token.value)
+

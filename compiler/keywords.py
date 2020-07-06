@@ -1,6 +1,8 @@
-from enum import Enum,Flag,auto
+from enum import IntFlag,auto
 
-class Keyword(Flag):
+""" Super class for everything """
+class Atom(IntFlag):
+  # Keywords
   CLASS = auto()
   METHOD = auto()
   FUNCTION = auto()
@@ -47,31 +49,54 @@ class Keyword(Flag):
   INTEGERCONSTANT = auto()
   STRINGCONSTANT = auto()
 
-class Symbol(Flag):
-    # Symbols Start here
-    BRACE_OPEN = Keyword.BRACE_OPEN
-    BRACE_CLOSE = Keyword.BRACE_CLOSE
-    PARAN_OPEN = Keyword.PARAN_OPEN
-    PARAN_CLOSE = Keyword.PARAN_CLOSE
-    SQUARE_OPEN = Keyword.SQUARE_OPEN
-    SQUARE_CLOSE = Keyword.SQUARE_CLOSE
-    DOT = Keyword.DOT
-    SEMICOLON = Keyword.SEMICOLON
-    PLUS = Keyword.PLUS
-    MINUS = Keyword.MINUS
-    MUL = Keyword.MUL
-    DIV = Keyword.DIV
-    AND = Keyword.AND
-    OR = Keyword.OR
-    LT = Keyword.LT
-    GT = Keyword.GT
-    EQ = Keyword.EQ
-    NOT = Keyword.NOT
-    COMMA = Keyword.COMMA
+class Keyword(IntFlag):
+  CLASS = Atom.CLASS.value
+  METHOD = Atom.METHOD.value
+  FUNCTION = Atom.FUNCTION.value
+  CONSTRUCTOR = Atom.CONSTRUCTOR.value
+  INT = Atom.INT.value
+  BOOLEAN = Atom.BOOLEAN.value
+  CHAR = Atom.CHAR.value
+  VOID = Atom.VOID.value
+  VAR = Atom.VAR.value
+  STATIC = Atom.STATIC.value
+  FIELD = Atom.FIELD.value
+  LET = Atom.LET.value
+  DO = Atom.DO.value
+  IF = Atom.IF.value
+  ELSE = Atom.ELSE.value
+  WHILE = Atom.WHILE.value
+  RETURN = Atom.RETURN.value
+  TRUE = Atom.TRUE.value
+  FALSE = Atom.FALSE.value
+  NULL = Atom.NULL.value
+  THIS = Atom.THIS.value
 
-class Token(Flag):
-    KEYWORD = auto()
-    SYMBOL = auto()
-    IDENTIFIER = Keyword.IDENTIFIER
-    INTEGERCONSTANT = Keyword.INTEGERCONSTANT
-    STRINGCONSTANT = Keyword.STRINGCONSTANT
+class Symbol(IntFlag):
+  # Symbols Start here
+  BRACE_OPEN = Atom.BRACE_OPEN.value
+  BRACE_CLOSE = Atom.BRACE_CLOSE.value
+  PARAN_OPEN = Atom.PARAN_OPEN.value
+  PARAN_CLOSE = Atom.PARAN_CLOSE.value
+  SQUARE_OPEN = Atom.SQUARE_OPEN.value
+  SQUARE_CLOSE = Atom.SQUARE_CLOSE.value
+  DOT = Atom.DOT.value
+  SEMICOLON = Atom.SEMICOLON.value
+  PLUS = Atom.PLUS.value
+  MINUS = Atom.MINUS.value
+  MUL = Atom.MUL.value
+  DIV = Atom.DIV.value
+  AND = Atom.AND.value
+  OR = Atom.OR.value
+  LT = Atom.LT.value
+  GT = Atom.GT.value
+  EQ = Atom.EQ.value
+  NOT = Atom.NOT.value
+  COMMA = Atom.COMMA.value
+
+class Token(IntFlag):
+  IDENTIFIER = Atom.IDENTIFIER.value
+  INTEGERCONSTANT = Atom.INTEGERCONSTANT.value
+  STRINGCONSTANT = Atom.STRINGCONSTANT.value
+  SYMBOL = auto()
+  KEYWORD = auto()
