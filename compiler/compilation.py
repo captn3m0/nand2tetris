@@ -62,11 +62,8 @@ class CompilationEngine:
     self.close('classVarDec')
     self.advance()
 
-
   """ Writes a single line(with \n) on the XML, taking into account the indentation """
   def write(self, klass, subklass = None):
-    print(self.type())
-    print(klass)
     assert(klass == self.type())
     if (klass == Token.SYMBOL):
       assert(subklass == self.s())
@@ -94,7 +91,7 @@ class CompilationEngine:
         self.write(T)
       self.advance()
 
-  def CompuleSubroutine(self):
+  def CompileSubroutine(self):
     self.open('subroutineDec')
     self.write()
     pass

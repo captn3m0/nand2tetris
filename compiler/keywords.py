@@ -46,3 +46,32 @@ class Keyword(Flag):
   IDENTIFIER = auto()
   INTEGERCONSTANT = auto()
   STRINGCONSTANT = auto()
+
+class Symbol(Flag):
+    # Symbols Start here
+    BRACE_OPEN = Keyword.BRACE_OPEN
+    BRACE_CLOSE = Keyword.BRACE_CLOSE
+    PARAN_OPEN = Keyword.PARAN_OPEN
+    PARAN_CLOSE = Keyword.PARAN_CLOSE
+    SQUARE_OPEN = Keyword.SQUARE_OPEN
+    SQUARE_CLOSE = Keyword.SQUARE_CLOSE
+    DOT = Keyword.DOT
+    SEMICOLON = Keyword.SEMICOLON
+    PLUS = Keyword.PLUS
+    MINUS = Keyword.MINUS
+    MUL = Keyword.MUL
+    DIV = Keyword.DIV
+    AND = Keyword.AND
+    OR = Keyword.OR
+    LT = Keyword.LT
+    GT = Keyword.GT
+    EQ = Keyword.EQ
+    NOT = Keyword.NOT
+    COMMA = Keyword.COMMA
+
+class Token(Flag):
+    KEYWORD = auto()
+    SYMBOL = auto()
+    IDENTIFIER = Keyword.IDENTIFIER
+    INTEGERCONSTANT = Keyword.INTEGERCONSTANT
+    STRINGCONSTANT = Keyword.STRINGCONSTANT

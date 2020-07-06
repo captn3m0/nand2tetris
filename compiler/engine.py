@@ -1,4 +1,6 @@
 from tokenizer import JackTokenizer
+from keywords import *
+from grammar import CLASS
 
 """
 New Compilation Engine
@@ -8,3 +10,6 @@ class Engine:
     self.i = 0
     self.jt = JackTokenizer(input_file, False)
     self.file = open(input_file + ".xml", 'w')
+
+  def xml_file(self, input_file):
+    return input_file + ".xml"
