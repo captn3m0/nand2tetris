@@ -18,12 +18,11 @@ a Python structure.
 
 """
 class Element:
-  def __init__(self, name, grammar, terminal = False):
+  def __init__(self, name, grammar):
     self.name = name
     self.grammar = grammar
-    self.terminal = terminal
 
-TYPES = Element('type', Atom.INT | Atom.CHAR | Atom.BOOLEAN | Atom.IDENTIFIER, True)
+TYPES = Element('type', Atom.INT | Atom.CHAR | Atom.BOOLEAN | Atom.IDENTIFIER)
 
 CLASSVARDEC = Element('classVarDec', [
   # static|field type (, name)* ;
@@ -37,13 +36,13 @@ VARDEC = Element('varDec', [Atom.VAR, TYPES, Atom.IDENTIFIER,
   [Atom.COMMA, Atom.IDENTIFIER],
   Atom.SEMICOLON
 ])
-UNARY_OP = Element('unaryOp', Atom.NOT | Atom.MINUS, True)
+UNARY_OP = Element('unaryOp', Atom.NOT | Atom.MINUS)
 
-CONSTANT = Element('KeywordConstant', Atom.TRUE | Atom.FALSE|Atom.NULL|Atom.THIS, True)
+CONSTANT = Element('KeywordConstant', Atom.TRUE | Atom.FALSE|Atom.NULL|Atom.THIS)
 
 TERM = Element('term', Atom.INTEGERCONSTANT | Atom.STRINGCONSTANT | Atom.TRUE | Atom.FALSE | Atom.IDENTIFIER)
 
-OP = Element('op', Atom.PLUS | Atom.MINUS | Atom.MUL | Atom.DIV | Atom.AND | Atom.OR | Atom.GT | Atom.LT | Atom.EQ, True)
+OP = Element('op', Atom.PLUS | Atom.MINUS | Atom.MUL | Atom.DIV | Atom.AND | Atom.OR | Atom.GT | Atom.LT | Atom.EQ)
 
 EXPRESSION = Element('expression', [TERM, [OP, TERM]])
 
@@ -118,21 +117,17 @@ SUBROUTINEDEC = Element('subroutineDec', [
   Atom.PARAN_OPEN,
   PARAMETER_LIST,
   Atom.PARAN_CLOSE,
-  # Subroutine Body {
+  # Subroutine Body
   Atom.BRACE_OPEN,
   SUBROUTINE_BODY,
   Atom.BRACE_CLOSE,
 ])
 
 CLASS = Element('class', [
-  # class className {
   Atom.CLASS,
   Atom.IDENTIFIER,
   Atom.BRACE_OPEN,
-  # class Variable Declarations (one or more) = list
-  CLASSVARDEC,
-  # subroutine declarations (one or more) = list
-  SUBROUTINEDEC,
-  # }
+  [CLASSVARDEC],
+  [SUBROUTINEDEC],
   Atom.BRACE_CLOSE
 ])
