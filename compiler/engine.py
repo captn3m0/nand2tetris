@@ -54,7 +54,7 @@ class Engine:
 
     # We don't have to move the cursor for LL0 grammar
     if matchOnly:
-      assert(lookahead == 1)
+      return lookup_keys in dictionary
 
     for _ in range(lookahead-1):
       self.advance()
