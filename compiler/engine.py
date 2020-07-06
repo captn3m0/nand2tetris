@@ -77,9 +77,16 @@ class Engine:
       self.write(line, end="")
 
     self.advance()
-    for e in grammar:
-      self.compile(e)
 
+    print(lookup_keys)
+    print("grammar inside matchDict ")
+    print(grammar)
+
+    # Grammar can be none
+    if grammar:
+      self.compile(grammar)
+
+    # TODO: Improve open and close for dicts
     if isinstance(el, Element):
       self.close(el)
 
@@ -109,7 +116,7 @@ class Engine:
       self.advance()
       return True
     else:
-      # print("%s != %s" % (current, expected))
+      print("%s != %s" % (current, expected))
       return False
 
   def open(self, el):
@@ -124,29 +131,37 @@ class Engine:
   If you set matchOnly = true, the cursor will not move forward
   If it is forced to move forward (LL1 grammar for eg,) it will raise an error instead
   """
-  def compile(self, thing, matchOnly = False):
-    if isinstance(thing, Element):
-      ret = self.compile(thing.grammar[0], True)
-      if (matchOnly == False and ret) or thing.empty:
-        self.open(thing)
-        for e in thing.grammar:
-          ret = self.compile(e)
-        self.close(thing)
-      return ret
-    elif callable(thing):
-      grammar = thing()
-      return self.compile(grammar, matchOnly)
-    else:
-      grammar = thing
-      grammarType = type(grammar)
+  def compile(self, grammar, matchOnly = False):
+    if callable(grammar):
+      ret = self.compile(grammar(), matchOnly)
+    elif isinstance(grammar, Element):
+      ret = self.compile(grammar.grammar, True)
 
-      if grammarType == list:
-        return self.ZeroOrMany(grammar, matchOnly)
-      elif grammarType == dict:
-        return self.MatchDict(grammar, matchOnly)
-      elif grammarType == tuple:
-        return self.ZeroOrOne(grammar, matchOnly)
-      elif grammarType == Atom:
-        return self.MatchAtom(grammar, matchOnly)
+      if grammar.name == 'term':
+        print(ret)
+        print(self.atom())
+
+      if (matchOnly == False and ret) or grammar.empty:
+        self.open(grammar)
+        # Avoid useless compilation
+        if ret:
+          ret = self.compile(grammar.grammar)
+        self.close(grammar)
+    elif isinstance(grammar, Sequence):
+      if matchOnly:
+        ret = self.compile(grammar[0], True)
       else:
-        raise Exception("Should not have reached here")
+        for e in grammar:
+          ret = self.compile(e)
+    elif isinstance(grammar, list):
+      ret = self.ZeroOrMany(grammar, matchOnly)
+    elif isinstance(grammar,dict):
+      ret = self.MatchDict(grammar, matchOnly)
+    elif isinstance(grammar,tuple):
+      ret = self.ZeroOrOne(grammar, matchOnly)
+    elif isinstance(grammar,Atom):
+      ret = self.MatchAtom(grammar, matchOnly)
+    else:
+      raise Exception("Invalid Grammar")
+
+    return ret
