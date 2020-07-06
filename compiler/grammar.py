@@ -27,6 +27,9 @@ class Element:
     self.name = name
     self.grammar = grammar
 
+  def __repr__(self):
+    return self.name
+
 CLASSVARDEC = Element('classVarDec', [
   # static|field type (, name)* ;
   Atom.STATIC | Atom.FIELD,
@@ -56,36 +59,41 @@ EXPRESSION = Element('expression', [TERM, [OP, TERM]])
 EXPRESSIONLIST = Element('expressionList', [(EXPRESSION, [Atom.COMMA, EXPRESSION])])
 
 DO_STATEMENT = Element('doStatement', [{
-  (Atom.IDENTIFIER, Atom.PARAN_OPEN): [
+  (Atom.IDENTIFIER, Atom.PAREN_OPEN): [
     EXPRESSIONLIST,
-    Atom.PARAN_CLOSE,
+    Atom.PAREN_CLOSE,
   ],
   (Atom.IDENTIFIER, Atom.DOT): [
     Atom.IDENTIFIER,
-    Atom.PARAN_OPEN,
+    Atom.PAREN_OPEN,
     EXPRESSIONLIST,
-    Atom.PARAN_CLOSE
+    Atom.PAREN_CLOSE
   ]
-}])
+},Atom.SEMICOLON])
 
-LET_STATEMENT = Element('whileStatement', [
-  Atom.IDENTIFIER, (Atom.SQUARE_OPEN, EXPRESSION, Atom.SQUARE_CLOSE)])
+LET_STATEMENT = Element('letStatement', [
+  Atom.IDENTIFIER,
+  (Atom.SQUARE_OPEN, EXPRESSION, Atom.SQUARE_CLOSE),
+  Atom.EQ,
+  EXPRESSION,
+  Atom.SEMICOLON
+])
 
 IF_STATEMENT = Element('ifStatement', [
-  Atom.PARAN_OPEN,
+  Atom.PAREN_OPEN,
   EXPRESSION,
-  Atom.PARAN_CLOSE,
+  Atom.PAREN_CLOSE,
   Atom.BRACE_OPEN,
   lambda: STATEMENTS,
   Atom.BRACE_CLOSE,
   # This is the tricky one
-  ( Atom.ELSE, Atom.BRACE_OPEN, lambda:STATEMENT, Atom.BRACE_CLOSE)
+  ( Atom.ELSE, Atom.BRACE_OPEN, lambda:STATEMENTS, Atom.BRACE_CLOSE)
 ])
 
 WHILE_STATEMENT = Element('whileStatement', [
-  Atom.PARAN_OPEN,
+  Atom.PAREN_OPEN,
   EXPRESSION,
-  Atom.PARAN_CLOSE,
+  Atom.PAREN_CLOSE,
   Atom.BRACE_OPEN,
   lambda: STATEMENTS,
   Atom.BRACE_CLOSE,
@@ -95,11 +103,11 @@ RETURN_STATEMENT = Element('returnStatement', [(EXPRESSION), Atom.SEMICOLON])
 
 # Just a constant, since this isn't a non-terminal
 STATEMENT = {
-  (Atom.LET): LET_STATEMENT,
-  (Atom.IF): IF_STATEMENT,
-  (Atom.WHILE): WHILE_STATEMENT,
-  (Atom.DO): DO_STATEMENT,
-  (Atom.RETURN): RETURN_STATEMENT
+  (Atom.LET,): LET_STATEMENT,
+  (Atom.IF,): IF_STATEMENT,
+  (Atom.WHILE,): WHILE_STATEMENT,
+  (Atom.DO,): DO_STATEMENT,
+  (Atom.RETURN,): RETURN_STATEMENT
 }
 
 STATEMENTS = Element('statements', [[STATEMENT]])
@@ -130,9 +138,9 @@ SUBROUTINEDEC = Element('subroutineDec', [
   Atom.CONSTRUCTOR | Atom.FUNCTION | Atom.METHOD,
   RETURN_TYPES,
   Atom.IDENTIFIER,
-  Atom.PARAN_OPEN,
+  Atom.PAREN_OPEN,
   PARAMETER_LIST,
-  Atom.PARAN_CLOSE,
+  Atom.PAREN_CLOSE,
   SUBROUTINE_BODY,
 ])
 

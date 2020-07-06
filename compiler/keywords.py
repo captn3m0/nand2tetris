@@ -1,7 +1,13 @@
 from enum import IntFlag,auto
 
+class PrintableFlag(IntFlag):
+  def __repr__(self):
+    if self.name:
+      return self.name
+    return super().__str__()
+
 """ Super class for everything """
-class Atom(IntFlag):
+class Atom(PrintableFlag):
   # Keywords
   CLASS = auto()
   METHOD = auto()
@@ -27,8 +33,8 @@ class Atom(IntFlag):
   # Symbols Start here
   BRACE_OPEN = auto()
   BRACE_CLOSE = auto()
-  PARAN_OPEN = auto()
-  PARAN_CLOSE = auto()
+  PAREN_OPEN = auto()
+  PAREN_CLOSE = auto()
   SQUARE_OPEN = auto()
   SQUARE_CLOSE = auto()
   DOT = auto()
@@ -49,7 +55,7 @@ class Atom(IntFlag):
   INTEGERCONSTANT = auto()
   STRINGCONSTANT = auto()
 
-class Keyword(IntFlag):
+class Keyword(PrintableFlag):
   CLASS = Atom.CLASS.value
   METHOD = Atom.METHOD.value
   FUNCTION = Atom.FUNCTION.value
@@ -72,12 +78,12 @@ class Keyword(IntFlag):
   NULL = Atom.NULL.value
   THIS = Atom.THIS.value
 
-class Symbol(IntFlag):
+class Symbol(PrintableFlag):
   # Symbols Start here
   BRACE_OPEN = Atom.BRACE_OPEN.value
   BRACE_CLOSE = Atom.BRACE_CLOSE.value
-  PARAN_OPEN = Atom.PARAN_OPEN.value
-  PARAN_CLOSE = Atom.PARAN_CLOSE.value
+  PAREN_OPEN = Atom.PAREN_OPEN.value
+  PAREN_CLOSE = Atom.PAREN_CLOSE.value
   SQUARE_OPEN = Atom.SQUARE_OPEN.value
   SQUARE_CLOSE = Atom.SQUARE_CLOSE.value
   DOT = Atom.DOT.value
@@ -94,7 +100,7 @@ class Symbol(IntFlag):
   NOT = Atom.NOT.value
   COMMA = Atom.COMMA.value
 
-class Token(IntFlag):
+class Token(PrintableFlag):
   IDENTIFIER = Atom.IDENTIFIER.value
   INTEGERCONSTANT = Atom.INTEGERCONSTANT.value
   STRINGCONSTANT = Atom.STRINGCONSTANT.value

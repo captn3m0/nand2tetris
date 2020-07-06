@@ -7,8 +7,8 @@ class JackTokenizer:
   SYMBOL_MAP = {
     '{': Symbol.BRACE_OPEN ,
     '}': Symbol.BRACE_CLOSE ,
-    '(': Symbol.PARAN_OPEN ,
-    ')': Symbol.PARAN_CLOSE ,
+    '(': Symbol.PAREN_OPEN ,
+    ')': Symbol.PAREN_CLOSE ,
     '[': Symbol.SQUARE_OPEN ,
     ']': Symbol.SQUARE_CLOSE ,
     '.': Symbol.DOT ,
