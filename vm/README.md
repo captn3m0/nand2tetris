@@ -11,7 +11,7 @@ We have 8 segments:
 - `temp` (shared)
 
 RAM Address | Usage
-============|=================
+------------|------------------
 0-15        | Virtual Registers
 16-255      | Static Variables (shared)
 256-2047    | Stack
@@ -19,7 +19,7 @@ RAM Address | Usage
 16384-24575 | Memory mapped I/O
 
 Register  |  Name  | Usage
-==========|========|=========
+----------|--------|------
 `RAM[0]`  | `SP`   | Stack Pointer
 `RAM[1]`  | `LCL`  | `local`
 `RAM[1]`  | `ARG`  | `argument`
