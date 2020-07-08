@@ -1,5 +1,5 @@
 import re
-from keywords import *
+from constants import *
 from html import escape
 from enum import Enum
 # Superclass in some sense

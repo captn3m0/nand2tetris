@@ -1,5 +1,5 @@
 from tokenizer import JackTokenizer
-from keywords import *
+from constants import *
 from grammar import *
 import sys
 

@@ -1,4 +1,4 @@
-from enum import IntFlag,auto
+from enum import IntFlag,auto,Enum
 
 class PrintableFlag(IntFlag):
   def __repr__(self):
@@ -106,3 +106,9 @@ class Token(PrintableFlag):
   STRINGCONSTANT = Atom.STRINGCONSTANT.value
   SYMBOL = auto()
   KEYWORD = auto()
+
+class SymbolType(Enum):
+  STATIC = auto()
+  FIELD = auto()
+  ARG = auto()
+  VAR = auto()

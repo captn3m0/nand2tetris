@@ -1,4 +1,4 @@
-from keywords import Atom
+from constants import Atom
 
 """
 The grammar is defined by the following constructs:
